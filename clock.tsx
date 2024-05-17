@@ -5,5 +5,5 @@ interface ClockProps {
     timeBlocks: TimeBlock[]
 }
 export function Clock({ timeBlocks }: ClockProps) {
-    return <Text>Hello</Text>
+    return <Text>Hello World</Text>
 }
