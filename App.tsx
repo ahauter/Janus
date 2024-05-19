@@ -5,30 +5,8 @@ import { Clock } from './clock';
 import { SQLiteProvider } from 'expo-sqlite';
 import { migrateDatabase } from './utils/dataStore';
 import { TimeBlock } from './dataTypes';
+import { generateTimeBlocksForDay } from './utils';
 
-const timeBlocks: TimeBlock[] = [
-  {
-    duration: 15 * 1000 * 60,
-    startTime: new Date("2024-05-18T14:30Z"),
-    tasks: [],
-    category: "work",
-    subTimeBlocks: []
-  },
-  {
-    duration: 15 * 1000 * 60,
-    startTime: new Date("2024-05-18T14:45Z"),
-    tasks: [],
-    category: "work",
-    subTimeBlocks: []
-  },
-  {
-    duration: 15 * 1000 * 60,
-    startTime: new Date("2024-05-18T15:00Z"),
-    tasks: [],
-    category: "work",
-    subTimeBlocks: []
-  }
-]
 //use 
 // import { useSQLiteContext } from 'expo-sqlite';
 // const db = useSQLiteContext(); 
@@ -41,7 +19,7 @@ export default function App() {
         <SQLiteProvider databaseName='janus.db' onInit={migrateDatabase} useSuspense>
           <Text>Open up App.tsx to start working on your app!</Text>
           <Text>Hello World</Text>
-          <Clock timeBlocks={timeBlocks} />
+          <Clock timeBlocks={currentTimeBlocks} duration={0} />
           <StatusBar style="auto" />
         </SQLiteProvider >
       </Suspense>
