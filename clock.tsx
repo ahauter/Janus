@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { Svg, Circle, Text, Polygon, ClipPath, Defs, G, Line } from 'react-native-svg';
 import { TimeBlock } from "./dataTypes";
 import { useClockInfo } from './utils';
+import { Dimensions } from 'react-native';
 
 interface ClockProps {
     timeBlocks: TimeBlock[]
@@ -23,7 +24,7 @@ function blockColor(block: TimeBlock) {
 
 export function Clock({ timeBlocks, duration }: ClockProps) {
   const { timeStr, handAngle } = useClockInfo();
-  const size = 420;
+  const size = Dimensions.get('window').width * 0.8;
   const radius = size / 2;
   const rotation = 360 / timeBlocks.length;
   const vertexOffset = Math.round(radius * Math.tan(Math.PI / timeBlocks.length));
@@ -92,7 +93,7 @@ export function Clock({ timeBlocks, duration }: ClockProps) {
   }
 
   return (
-    <View>
+    <View >
       <Svg width={size + 10} height={size + 10}>
         <Defs>
           <ClipPath id="outerClip">
