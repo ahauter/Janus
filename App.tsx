@@ -34,6 +34,7 @@ const timeBlocks: TimeBlock[] = [
 // const db = useSQLiteContext(); 
 // to get a reference of the database
 export default function App() {
+  const currentTimeBlocks = generateTimeBlocksForDay();
   return (
     <View style={styles.container}>
       <Suspense fallback={<ActivityIndicator size="large" color="#0000ff" />}>
