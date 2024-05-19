@@ -40,8 +40,8 @@ export function useClockInfo() {
     const currentH = new Date();
     const diff = currentH.getTime() - dayStart.getTime();
     const ang = diff / dayLength * 360;
-    setAngle(ang);
+    setAngle(Math.round(ang));
   };
-  setInterval(getTimeStr, 100);
+  setInterval(getTimeStr, 1000);
   return { timeStr, handAngle: angle };
 }
