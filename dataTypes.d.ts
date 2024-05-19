@@ -1,7 +1,9 @@
 export interface Task {
+    id: number | undefined,
     name: string,
     category: string,
-    dueData: Date
+    dueDate: Date,
+    completed: boolean
 }
 
 export interface TimeBlock {
