@@ -1,6 +1,6 @@
 import React from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { StatusBarStyle, StyleSheet, Text, View, Image } from 'react-native';
+import { StatusBarStyle, StyleSheet, Text, View, Image, SafeAreaView } from 'react-native';
 import { Clock } from './clock';
 import { TimeBlock } from './dataTypes';
 const timeBlocks: TimeBlock[] = [
@@ -28,27 +28,38 @@ const timeBlocks: TimeBlock[] = [
 ]
 export default function App() {
   return (
+    
     <View style={styles.container}>
-      <StatusBar style={styles.navBar} animated/>
+      <StatusBar/>
       <View style={styles.titleBox}>
         <Text style={styles.title}>Choose Your Dosha</Text>
         <Text style={styles.subtitle}>{'This will affect when we schedule your most important tasks.\nDon\'t worry you can always change this later'}</Text>
       </View>
       <View style={styles.Dosha1}>
-        <Text>Vata</Text>
+      <Image style={styles.Icon} source={require('./assets/Pitta.png')} />
+        <View style={styles.BoxInternalR}>
+          <Text>Vata</Text>
+        </View>
       </View>
       <View style={styles.Dosha2}>
-        <Text>Pitta</Text>
+        <View style={styles.BoxInternalL}>
+          <Text>Pitta</Text>
+        </View>
         <Image style={styles.Icon} source={require('./assets/Pitta.png')} />
       </View>
       <View style={styles.Dosha3}>
-        <Text >Kapha</Text>
+      <Image style={styles.Icon} source={require('./assets/Pitta.png')} />
+        <View style={styles.BoxInternalR}>
+          <Text>Kapha</Text>
+        </View>
       </View>
     </View>
   );
 }
-
+const colour='#FF7F50';
+const barColour = '#DDD';
 const styles = StyleSheet.create({
+  
   container: {
     flex:1,
     backgroundColor: '#fff',
@@ -56,11 +67,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   navBar:{
-    backgroundColor:'#98D369',
+    backgroundColor:colour,
   },
   titleBox:{
-    backgroundColor:'#98D369',
-    paddingTop:30,
+    backgroundColor:colour,
+    marginTop:'-25%',
+    paddingTop:40,
     marginHorizontal:10,
     paddingHorizontal:10,
     width: '100%',
@@ -83,27 +95,41 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center'
   },
+  DoshaTitle:{
+    fontSize:25,
+    fontWeight:'bold',
+    color:'#000',
+  },
+  DoshaSubtitle:{
+    fontSize:18,
+    fontWeight:'bold',
+    color:'#111',
+  },
   Dosha1:{
     //flex: 2,
-    backgroundColor:'#ddd',
+    marginTop:'15%',
+    flexDirection: 'row',
+    backgroundColor: barColour,
     alignItems: 'center',
-    justifyContent:'flex-end',
+    justifyContent:'flex-start',
     borderBottomLeftRadius:100,
     borderTopLeftRadius:100,
     margin:30,
     marginRight:0,
-    width:'85%',
     marginLeft:70,
     height: '18%',
+    width:'85%',
+    paddingLeft:20,
   },
   Dosha2:{
     //flex: 3,
-    backgroundColor:'#ddd',
+    backgroundColor: barColour,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     borderTopRightRadius:70,
     borderBottomRightRadius:70,
+    paddingEnd:20,
     marginLeft:0,
     marginRight:60,
     width:'85%',
@@ -112,9 +138,10 @@ const styles = StyleSheet.create({
     paddingRight:0,
   },Dosha3:{
     //flex: 4,
-    backgroundColor:'#ddd',
+    flexDirection: 'row',
+    backgroundColor: barColour,
     alignItems: 'center',
-    justifyContent:'flex-end',
+    justifyContent:'flex-start',
     borderBottomLeftRadius:100,
     borderTopLeftRadius:100,
     margin:30,
@@ -122,13 +149,26 @@ const styles = StyleSheet.create({
     marginLeft:70,
     height: '18%',
     width:'85%',
-    flexDirection: 'row',
-    paddingRight:20,
-    marginBottom:'20%',
+    paddingLeft:20,
+    marginBottom:'5%',
     
+  },
+  BoxInternalL:{
+    flexDirection:'row',
+    justifyContent:'center',
+    alignContent:'flex-start',
+    width: '100%',
+  },
+  BoxInternalR:{
+    flexDirection:'row-reverse',
+    justifyContent:'center',
+    alignContent:'flex-start',
+    width: '100%',
   },
   Icon:{
     width: 100,
     height: 100,
+    backgroundColor:colour,
+    borderRadius:50,
   },
 });
