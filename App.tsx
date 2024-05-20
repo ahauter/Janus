@@ -38,26 +38,35 @@ export default function App() {
       <View style={styles.Dosha1}>
       <Image style={styles.Icon} source={require('./assets/Pitta.png')} />
         <View style={styles.BoxInternalR}>
-          <Text>Vata</Text>
+          <View style={styles.BoxVertL}>
+            <Text style={styles.DoshaTitle}>Vata</Text>
+            <Text style={styles.DoshaSubtitle}>Description here</Text>
+          </View>
         </View>
       </View>
       <View style={styles.Dosha2}>
         <View style={styles.BoxInternalL}>
-          <Text>Pitta</Text>
+          <View style={styles.BoxVertR}>
+            <Text style={styles.DoshaTitle}>Pitta</Text>
+            <Text style={styles.DoshaSubtitle}>Description here</Text>
+          </View>
         </View>
         <Image style={styles.Icon} source={require('./assets/Pitta.png')} />
       </View>
       <View style={styles.Dosha3}>
       <Image style={styles.Icon} source={require('./assets/Pitta.png')} />
         <View style={styles.BoxInternalR}>
-          <Text>Kapha</Text>
+          <View style={styles.BoxVertL}>
+            <Text style={styles.DoshaTitle}>Kapha</Text>
+            <Text style={styles.DoshaSubtitle}>Description here</Text>
+          </View>
         </View>
       </View>
     </View>
   );
 }
 const colour='#FF7F50';
-const barColour = '#DDD';
+const barColour = '#CCC';
 const styles = StyleSheet.create({
   
   container: {
@@ -103,7 +112,7 @@ const styles = StyleSheet.create({
   DoshaSubtitle:{
     fontSize:18,
     fontWeight:'bold',
-    color:'#111',
+    color:'#FFF',
   },
   Dosha1:{
     //flex: 2,
@@ -164,6 +173,21 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     alignContent:'flex-start',
     width: '100%',
+  },
+  BoxVertL: {
+    flexDirection:'column',
+    width:'100%',
+    justifyContent:'center',
+    alignContent:'flex-start',
+    padding:20,
+  },
+  BoxVertR: {
+    flexDirection:'column',
+    width:'100%',
+    justifyContent:'center',
+    alignContent:'flex-start',
+    padding:20,
+    paddingLeft:'35%',
   },
   Icon:{
     width: 100,
