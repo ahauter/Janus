@@ -14,11 +14,11 @@ interface ClockProps {
 function blockColor(block: TimeBlock) {
   switch (block.category) {
     case "sleep":
-      return "blue";
+      return "#9b54ba";
     case "work":
-      return "orange";
+      return "#256983";
     default:
-      return "gray";
+      return "#7582e5";
   }  
 }
 
@@ -65,7 +65,7 @@ export function Clock({ timeBlocks, duration }: ClockProps) {
         y2={0}
         originX={radius}
         originY={radius}
-        stroke={"black"}
+        stroke={"white"}
         strokeWidth={1}
         rotation={curRotation}
       />
@@ -81,7 +81,7 @@ export function Clock({ timeBlocks, duration }: ClockProps) {
     numbers.push(
       <Text
         key={`number-${i}`}
-        fill="black"
+        fill="white"
         fontSize="15"
         x={x}
         y={y + 5}
@@ -119,21 +119,21 @@ export function Clock({ timeBlocks, duration }: ClockProps) {
             originX={radius}
             originY={radius}
             stroke={"purple"}
-            strokeWidth={5}
+            strokeWidth={4}
             rotation={Math.round(handAngle)}
           />
         </G>
         <Circle
           fill="white"
-          stroke="black"
+          stroke="white"
           strokeWidth={2}
           cx={size / 2}
           cy={size / 2}
-          r={0.25 * radius}
+          r={0.4 * radius}
         />
         {numbers}
         <Text
-          fill="black"
+          fill="grey"
           stroke="black"
           fontSize="20"
           x={radius}
