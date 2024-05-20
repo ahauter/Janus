@@ -1,6 +1,6 @@
 import React from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { StatusBarStyle, StyleSheet, Text, View } from 'react-native';
+import { StatusBarStyle, StyleSheet, Text, View, Image } from 'react-native';
 import { Clock } from './clock';
 import { TimeBlock } from './dataTypes';
 const timeBlocks: TimeBlock[] = [
@@ -29,7 +29,7 @@ const timeBlocks: TimeBlock[] = [
 export default function App() {
   return (
     <View style={styles.container}>
-      <StatusBar animated />
+      <StatusBar style={styles.navBar} animated/>
       <View style={styles.titleBox}>
         <Text style={styles.title}>Choose Your Dosha</Text>
         <Text style={styles.subtitle}>{'This will affect when we schedule your most important tasks.\nDon\'t worry you can always change this later'}</Text>
@@ -39,9 +39,10 @@ export default function App() {
       </View>
       <View style={styles.Dosha2}>
         <Text>Pitta</Text>
+        <Image style={styles.Icon} source={require('./assets/Pitta.png')} />
       </View>
       <View style={styles.Dosha3}>
-        <Text>Kapha</Text>
+        <Text >Kapha</Text>
       </View>
     </View>
   );
@@ -49,7 +50,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex:1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
     paddingHorizontal:10,
     width: '100%',
     height:150,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems:'center',
 
   },
@@ -86,26 +87,48 @@ const styles = StyleSheet.create({
     //flex: 2,
     backgroundColor:'#ddd',
     alignItems: 'center',
-    justifyContent:'center',
-    borderRadius:10,
+    justifyContent:'flex-end',
+    borderBottomLeftRadius:100,
+    borderTopLeftRadius:100,
     margin:30,
-    height: '20%',
+    marginRight:0,
+    width:'85%',
+    marginLeft:70,
+    height: '18%',
   },
   Dosha2:{
     //flex: 3,
     backgroundColor:'#ddd',
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent:'center',
-    borderRadius:10,
-    margin:30,
-    height: '20%',
+    justifyContent: 'center',
+    borderTopRightRadius:70,
+    borderBottomRightRadius:70,
+    marginLeft:0,
+    marginRight:60,
+    width:'85%',
+    height: '18%',
+    paddingLeft:20,
+    paddingRight:0,
   },Dosha3:{
     //flex: 4,
     backgroundColor:'#ddd',
     alignItems: 'center',
-    justifyContent:'center',
-    borderRadius:10,
+    justifyContent:'flex-end',
+    borderBottomLeftRadius:100,
+    borderTopLeftRadius:100,
     margin:30,
-    height: '20%',
+    marginRight:0,
+    marginLeft:70,
+    height: '18%',
+    width:'85%',
+    flexDirection: 'row',
+    paddingRight:20,
+    marginBottom:'20%',
+    
+  },
+  Icon:{
+    width: 100,
+    height: 100,
   },
 });
