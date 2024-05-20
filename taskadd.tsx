@@ -5,9 +5,13 @@ import { Task, TimeBlock } from './dataTypes';
 
 export default function AddTaskScreen() {
     const[name, setName] = useState("")
+    const[category, setCategory] = useState("")
+    const[dueData, set dueData] = useState("")
     return ( 
         <SafeAreaView style={styles.input}>
             <TextInput style={styles.input} value={name} onChangeText={setName} />
+            <TextInput style={styles.input} value={category} onChangeText={setCategory} />
+            <TextInput style={styles.input} value={dueData} onChangeText={} />
         </SafeAreaView>
     );
 
