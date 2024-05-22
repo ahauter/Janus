@@ -15,7 +15,8 @@
     "react-native": "0.74.1",
     "typed-async-storage": "^3.1.2",
     "@react-native-community/datetimepicker": "8.0.1",
-    "@react-native-picker/picker": "2.7.5"
+    "@react-native-picker/picker": "2.7.5",
+    "expo-checkbox": "~3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
