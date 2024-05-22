@@ -7,95 +7,29 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 import { HOUR, MINUTE } from './utils/duration';
 import { Categories, Category } from './utils/categories';
-
-interface TaskStubDisplay {
-  name: string;
-  taskLength: Date;
-}
-
-interface TaskStubProps {
-  name: string;
-  setName: (name: string) => void;
-  taskLength: Date;
-  setTaskLength: (length: Date) => void;
-  removeTask: (name: string) => void;
-}
-
-function newTaskStub(): TaskStubDisplay {
-  const length = new Date();
-  length.setHours(0,0,0,0);
-  return {
-    name: "",
-    taskLength: length
-  } 
-}
-
-function makeTaskStub(t: TaskStubDisplay): TaskStub {
-  const lenStr = `${t.taskLength.getHours()}h${t.taskLength.getMinutes()}m`;
-  return {
-    name: t.name,
-    estimatedLength: lenStr
-  }
-}
-
-//We might want to test this..
-function makeDistplayStub(t: TaskStub): TaskStubDisplay | null{
-  const regex = /([0-9]*h)?([0-9]+m)/gm
-  if(!regex.test(t.estimatedLength)){
-    return null
-  }
-  const h_ind = t.estimatedLength.indexOf("h")
-  const m_ind = t.estimatedLength.indexOf("m")
-  let hours = 0
-  let minutes = 0
-  if (h_ind > 0) {
-    const h_str = t.estimatedLength.substring(0, h_ind)
-    try {
-      hours = parseInt(h_str)
-    } catch {
-      return null
-    }
-  }
-  const min_str = t.estimatedLength.substring(h_ind + 1, m_ind)
-  try {
-    minutes = parseInt(min_str)
-  } catch {
-    return null
-  }
-  const length = new Date();
-  length.setHours(hours, minutes, 0,0)
-  
-  return {
-    name: t.name,
-    taskLength: length
-  }
-}
-
-function DisplayTaskStub({name, setName, taskLength, setTaskLength, removeTask}:TaskStubProps) {
-  let taskLengthInt = HOUR * taskLength.getHours() + MINUTE * taskLength.getMinutes();
-  return }
+import { addTask } from './utils/dataStore';
+import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
 
 function saveTasks(
   navigation: any,
-  taskStubs: TaskStubDisplay[], 
+  db: SQLiteDatabase,
+  name: string,
+  length: Date,
   category: string,
   dueDate: Date,
   isEvent: boolean
 ) {
-  let lastTask = null;
-  for(let taskStub of taskStubs) {
-    if(taskStub.name.length === 0) continue
-    const newTask: Task = {
-      id: undefined,
-      name: taskStub.name,
-      dueDate: dueDate,
-      completed: false,
-      category: category,
-      isEvent: isEvent,
-      estimatedDuration: taskStub.taskLength
-    }
-    //save the task in the db
+  if(name.length === 0) return
+  const newTask: Task = {
+    id: undefined,
+    name: name,
+    dueDate: dueDate,
+    completed: false,
+    category: category,
+    isEvent: isEvent,
+    estimatedDuration: length
   }
+  addTask(db, newTask)
   navigation.navigate('Home')
 }
 
@@ -108,6 +42,7 @@ export default function AddTaskScreen({navigation}) {
     const[category, setCategory] = useState("")
     const[dueDate, setDueDate] = useState(new Date())
     const[isEvent, setIsEvent] = useState(false)
+    const db = useSQLiteContext();
     //TODO make the tasks drag and dropable
     return (
         <SafeAreaView>
@@ -124,7 +59,6 @@ export default function AddTaskScreen({navigation}) {
                     locale='en_GB'
                     onChange={(_, date) => { if(date) setTaskLength(date) }} 
                   />
-                  <Button title='Delete' onPress={() => removeTask(name)}/>
                 </View>
               </View>
             </View>
@@ -155,7 +89,7 @@ export default function AddTaskScreen({navigation}) {
           }>
             {Categories.map(category => <Picker.Item key={category} value={category} label={category} />)}
           </Picker>
-          <Button title="Save" onPress={()=>saveTasks(navigation, taskStubs, category, dueDate, isEvent)} />
+          <Button title="Save" onPress={()=>saveTasks(navigation, db, name, taskLength, category, dueDate, isEvent)} />
           </ScrollView>
         </SafeAreaView>
     );
