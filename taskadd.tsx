@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useRef} from 'react';
+import React, {useState} from 'react';
 import { StatusBar, SafeAreaView, StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity, Button} from 'react-native';
 import CheckBox from 'expo-checkbox';
 import { Task } from './dataTypes';
@@ -111,10 +111,8 @@ function saveTasks(
       completed: false,
       category: category,
       isEvent: isEvent,
-      preqTasks: [],
       estimatedDuration: taskStub.taskLength
     }
-    if (lastTask) newTask.preqTasks.push(lastTask)
     //save the task in the db
   }
   navigation.navigate('Home')
@@ -159,6 +157,7 @@ export default function AddTaskScreen({navigation}) {
           <Text>Add a Task</Text>
           {taskStubs.map(ts => <View>
               <DisplayTaskStub 
+               key={ts.name}
                name={ts.name} taskLength={ts.taskLength} removeTask={removeTask}
                setName={n => setTaskName(ts, n)} setTaskLength={l => setTaskLength(ts, l)}
               />
