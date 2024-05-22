@@ -8,19 +8,6 @@ import {Picker} from '@react-native-picker/picker';
 import { HOUR, MINUTE } from './utils/duration';
 import { CATEGORIES_TO_COLORS, Categories } from './utils/categories';
 
-const DurationPickerStyles = StyleSheet.create({
-  container: { 
-    display: "flex",
-    flexDirection: "row",
-    padding: 5
-  },
-  picker: {
-    display: "flex",
-    width: 5,
-    height: 4,
-    padding: 4
-  }
-});
 
 export default function AddTaskScreen() {
     const[name, setName] = useState("")
@@ -75,7 +62,6 @@ export default function AddTaskScreen() {
           }>
             {Categories.map(category => <Picker.Item key={category} value={category} label={category} />)}
           </Picker>
-          
         </SafeAreaView>
     );
 }
