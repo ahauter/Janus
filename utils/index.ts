@@ -1,9 +1,17 @@
 import { TimeBlock } from "../dataTypes";
+import { Category } from "./categories";
 import { useState } from 'react'
-function getTimeBlockCategory(hour: number): string {
-  if (hour < 7 || hour > 21) return "sleep";
-  if (hour > 9 && hour < 17) return "work";
-  return "idk man";
+
+function getTimeBlockCategory(hour: number, dosha: "vata" | "pitta" | "kapha" = "vata"): Category {
+  if (dosha === "vata") {
+    if (hour >= 21 || hour <= 4) return "Sleep"
+    if (hour > 21 || hour < 4) return "Spiritual"
+    if (hour > 5 && hour <= 10 || hour >= 16 && hour <= 20) return "Work/Creativity"
+    if (hour > 10 && hour <= 11) return "Exercise"
+    if (hour > 11 && hour <= 12 || hour > 14 && hour < 16) return "Chores"
+    if (hour > 12 && hour <= 13) return "Social"
+  } else if (dosha === "pitta") { } else { }
+  return "None"
 }
 
 /**
