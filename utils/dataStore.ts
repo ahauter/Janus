@@ -127,6 +127,21 @@ export async function getActiveTask(db: SQLiteDatabase) {
   }
 }
 
+export async function isPaused(db: SQLiteDatabase): Promise<boolean> {
+  try {
+    //don't format the task values, because we don't want user's to sql inject themselves
+    const isPaused = await db.getFirstAsync<boolean>(`
+      SELECT isPaused FROM ${TASKTABLENAME} 
+      where isActive = 1;`,
+    );
+    if (isPaused === null) return false;
+    return isPaused
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+}
+
 export async function deleteTask(db: SQLiteDatabase, t: Task): Promise<boolean> {
   if (t.id === undefined) {
     console.error("Warning! Task does not exist! Do not delete a task without an id")
