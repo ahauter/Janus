@@ -6,11 +6,8 @@ import { SQLiteProvider } from 'expo-sqlite';
 import { migrateDatabase } from './utils/dataStore';
 import { TimeBlock } from './dataTypes';
 import { generateTimeBlocksForDay } from './utils';
+import AddTaskScreen from './taskadd';
 
-//use 
-// import { useSQLiteContext } from 'expo-sqlite';
-// const db = useSQLiteContext(); 
-// to get a reference of the database
 export default function App() {
   const currentTimeBlocks = generateTimeBlocksForDay();
   return (
