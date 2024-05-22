@@ -125,10 +125,6 @@ export default function AddTaskScreen({navigation}) {
     const addTask = (t: TaskStubDisplay) => {
       const newTasks = [...taskStubs];
       newTasks.push(t);
-      if(!taskOrderShown) {
-        alert("Tasks at bottom must be completed after tasks at top!")
-        setTaskOrderShow(true)
-      }
       setTaskStubs(newTasks);
     }
     const removeTask = (name:string) => {
