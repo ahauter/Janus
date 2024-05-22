@@ -7,7 +7,7 @@ import {TaskStub} from './utils/generateTasks';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 import { HOUR, MINUTE } from './utils/duration';
-import { Categories } from './utils/categories';
+import { Categories, Category } from './utils/categories';
 
 interface TaskStubDisplay {
   name: string;
@@ -95,6 +95,24 @@ function DisplayTaskStub({name, setName, taskLength, setTaskLength, removeTask}:
   </View>
 }
 
+function saveTasks(
+  taskStubs: TaskStubDisplay[], 
+  category: Category,
+  dueDate: Date,
+  isEvent: boolean
+) {
+  let lastTask = null;
+  for(let taskStub of taskStubs) {
+    if(taskStub.name.length === 0) continue
+    const newTask: Task = {
+      name: taskStub.name,
+      dueData: dueDate,
+      category: category,
+      estimatedDuration: taskStub.taskLength
+    }
+    //save the task in the db
+  }
+}
 export default function AddTaskScreen() {
     const [taskStubs, setTaskStubs] = useState([newTaskStub()])
     const [taskOrderShown, setTaskOrderShow] = useState(false)
@@ -126,6 +144,7 @@ export default function AddTaskScreen() {
     const[category, setCategory] = useState("")
     const[dueDate, setDueDate] = useState(new Date())
     const[isEvent, setIsEvent] = useState(false)
+    //TODO make the tasks drag and dropable
     return (
         <SafeAreaView>
           <ScrollView style={styles.scrollBar}>
