@@ -5,6 +5,13 @@ export type Category = "Work/Creativity" |
   "Spiritual" |
   "Sleep";
 
+export const Categories = ["Work/Creativity",
+  "Exercise",
+  "Chores",
+  "Social",
+  "Spiritual",
+  "Sleep"];
+
 export const CATEGORIES_TO_COLORS = {
   "Social": ["#4A90E2", "#504BE3", "#4BDEE3"],
   "Sleep": ["#9370DB"],
