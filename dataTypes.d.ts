@@ -3,7 +3,8 @@ export interface Task {
   name: string,
   category: string,
   dueDate: Date,
-  preqTasks: Task[],
+  //for now user can figure out preqs
+  //preqTasks: Task[],
   completed: boolean,
   isEvent: boolean,
   estimatedDuration: Date
