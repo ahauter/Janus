@@ -73,26 +73,7 @@ function makeDistplayStub(t: TaskStub): TaskStubDisplay | null{
 
 function DisplayTaskStub({name, setName, taskLength, setTaskLength, removeTask}:TaskStubProps) {
   let taskLengthInt = HOUR * taskLength.getHours() + MINUTE * taskLength.getMinutes();
-  return <View>
-    <View style={styles.taskView}>
-      <TextInput style={styles.input} value={name} onChangeText={setName} />
-      <View>
-        {taskLengthInt > 15 * MINUTE && <View>
-          <Button title="Split Up Task" onPress={() => {}}/>
-        </View>}
-        <View style={styles.taskView}>
-          <DateTimePicker 
-            value={taskLength} 
-            mode="time"
-            locale='en_GB'
-            onChange={(_, date) => { if(date) setTaskLength(date) }} 
-          />
-          <Button title='Delete' onPress={() => removeTask(name)}/>
-        </View>
-      </View>
-    </View>
-  </View>
-}
+  return }
 
 function saveTasks(
   navigation: any,
@@ -120,28 +101,10 @@ function saveTasks(
 
 //@ts-ignore
 export default function AddTaskScreen({navigation}) {
-    const [taskStubs, setTaskStubs] = useState([newTaskStub()])
-    const addTask = (t: TaskStubDisplay) => {
-      const newTasks = [...taskStubs];
-      newTasks.push(t);
-      setTaskStubs(newTasks);
-    }
-    const removeTask = (name:string) => {
-      const newTasks = [...taskStubs].filter(t => t.name !== name);
-      if (newTasks.length === 0) {
-        newTasks.push(newTaskStub())
-      }
-      setTaskStubs(newTasks);
-    }
-    const setTaskName = (task: TaskStubDisplay, newName: string) => {
-      task.name = newName;
-      //to update the ui 
-      setTaskStubs([...taskStubs])
-    } 
-    const setTaskLength = (task: TaskStubDisplay, newLength: Date) => {
-      task.taskLength = newLength;
-      setTaskStubs([...taskStubs])
-    } 
+    const [name, setName] = useState("")
+    const defLength = new Date()
+    defLength.setHours(0,0,0,0)
+    const [taskLength, setTaskLength] = useState(defLength)
     const[category, setCategory] = useState("")
     const[dueDate, setDueDate] = useState(new Date())
     const[isEvent, setIsEvent] = useState(false)
@@ -150,14 +113,22 @@ export default function AddTaskScreen({navigation}) {
         <SafeAreaView>
           <ScrollView style={styles.scrollBar}>
           <Text>Add a Task</Text>
-          {taskStubs.map(ts => <View>
-              <DisplayTaskStub 
-               key={ts.name}
-               name={ts.name} taskLength={ts.taskLength} removeTask={removeTask}
-               setName={n => setTaskName(ts, n)} setTaskLength={l => setTaskLength(ts, l)}
-              />
-            </View>)}
-          <Button title='Add subtask' onPress={() => addTask(newTaskStub())}/>
+          <View>
+            <View style={styles.taskView}>
+              <TextInput style={styles.input} value={name} onChangeText={setName} />
+              <View>
+                <View style={styles.taskView}>
+                  <DateTimePicker 
+                    value={taskLength} 
+                    mode="time"
+                    locale='en_GB'
+                    onChange={(_, date) => { if(date) setTaskLength(date) }} 
+                  />
+                  <Button title='Delete' onPress={() => removeTask(name)}/>
+                </View>
+              </View>
+            </View>
+          </View>
           <View style={styles.input}>
             <DateTimePicker
               value={dueDate} 

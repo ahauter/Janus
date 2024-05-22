@@ -13,6 +13,7 @@ import SettingsIcon from './assets/settings.png';
 import Accordion from 'react-native-collapsible/Accordion';
 import { Linking } from 'react-native';
 import * as Device from 'expo-device';
+import { TaskList } from './taskview';
 
 const Stack = createStackNavigator();
 
@@ -21,63 +22,56 @@ function HomeScreen({ navigation }) {
   const currentTimeBlocks = generateTimeBlocksForDay();
   const top = Device.brand === "Apple"? 50 : 20;   
   return (
-    <View style={styles.container}>
-      <View style={{ flexDirection: 'row', position: 'absolute', top: top, width: screen_width, justifyContent: 'space-between' }}>
-        <TouchableOpacity
-          style={styles.settings}
-          onPress={() => navigation.navigate('Settings')}
-        >
-          <Image source={SettingsIcon} style={styles.icon} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.taskButton}
-          onPress={() => navigation.navigate('Tasks')}
-        >
-          <Text style={styles.buttonText}>Add task</Text>
-        </TouchableOpacity>
+      <View style={styles.container}>
+        <View style={{ flexDirection: 'row', position: 'absolute', top: top, width: screen_width, justifyContent: 'space-between' }}>
+          <TouchableOpacity
+            style={styles.settings}
+            onPress={() => navigation.navigate('Settings')}
+          >
+            <Image source={SettingsIcon} style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.taskButton}
+            onPress={() => navigation.navigate('Tasks')}
+          >
+            <Text style={styles.buttonText}>Add task</Text>
+          </TouchableOpacity>
+        </View>
+        <Clock timeBlocks={currentTimeBlocks} duration={1000 * 60 * 60 * 24} />
+        <View style={{ flexDirection: 'row', justifyContent: 'center', width: screen_width, marginTop: 60, backgroundColor: '#007BFF', borderRadius: 10, padding: 5 }}>
+          <TouchableOpacity
+            style={styles.buttonBottom}
+            onPress={() => navigation.navigate('Tasks')}
+          >
+            <Text style={styles.smallText}>Current task</Text>
+          </TouchableOpacity>
+          <Text>  |  </Text>
+          <TouchableOpacity
+            style={styles.buttonBottom}
+            onPress={() => navigation.navigate('ViewTasks')}
+          >
+            <Text style={styles.smallText}>Timer</Text>
+          </TouchableOpacity>
+          <Text>  |  </Text>
+          <TouchableOpacity
+            style={styles.buttonBottom}
+            onPress={() => navigation.navigate('ViewTasks')}
+          >
+            <Text style={styles.smallText}>Pause task</Text>
+          </TouchableOpacity>
+          <Text>  |  </Text>
+          <TouchableOpacity
+            style={styles.buttonBottom}
+            onPress={() => navigation.navigate('ViewTasks')}
+          >
+            <Text style={styles.smallText}>Finish task</Text>
+          </TouchableOpacity>
+        </View>
+        <StatusBar barStyle="light-content" backgroundColor="black" />
       </View>
-      <Clock timeBlocks={currentTimeBlocks} duration={1000 * 60 * 60 * 24} />
-      <View style={{ flexDirection: 'row', justifyContent: 'center', width: screen_width, marginTop: 60, backgroundColor: '#007BFF', borderRadius: 10, padding: 5 }}>
-        <TouchableOpacity
-          style={styles.buttonBottom}
-          onPress={() => navigation.navigate('Tasks')}
-        >
-          <Text style={styles.smallText}>Current task</Text>
-        </TouchableOpacity>
-        <Text>  |  </Text>
-        <TouchableOpacity
-          style={styles.buttonBottom}
-          onPress={() => navigation.navigate('Tasks')}
-        >
-          <Text style={styles.smallText}>Timer</Text>
-        </TouchableOpacity>
-        <Text>  |  </Text>
-        <TouchableOpacity
-          style={styles.buttonBottom}
-          onPress={() => navigation.navigate('Tasks')}
-        >
-          <Text style={styles.smallText}>Pause task</Text>
-        </TouchableOpacity>
-        <Text>  |  </Text>
-        <TouchableOpacity
-          style={styles.buttonBottom}
-          onPress={() => navigation.navigate('Tasks')}
-        >
-          <Text style={styles.smallText}>Finish task</Text>
-        </TouchableOpacity>
-      </View>
-      <StatusBar barStyle="light-content" backgroundColor="black" />
-    </View>
   );
 }
 
-function TasksScreen() {
-  return (
-    <View style={styles.container}>
-      <Text>Tasks</Text>
-    </View>
-  );
-}
 
 function SettingsScreen() {
   const SECTIONS = [
@@ -136,13 +130,16 @@ function SettingsScreen() {
 
 export default function App() {
   return (
+    <SQLiteProvider databaseName='Janus.db' onInit={migrateDatabase}>
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Tasks" component={AddTaskScreen} />
+        <Stack.Screen name="ViewTasks" component={TaskList} />
         <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerTitle: '', headerTransparent: true }} />
       </Stack.Navigator>
     </NavigationContainer>
+    </SQLiteProvider>
   );
 }
 
