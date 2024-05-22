@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { Clock } from './clock';
 import { TimeBlock } from './dataTypes';
+import AddTaskScreen from './taskadd';
 const timeBlocks: TimeBlock[] = [
   {
     duration: 15 * 1000 * 60,
@@ -31,7 +32,7 @@ export default function App() {
     <View style={styles.container}>
       <Text>Open up App.tsx to start working on your app!</Text>
       <Text>Hello World</Text>
-      <Clock timeBlocks={timeBlocks} />
+      <AddTaskScreen/>
       <StatusBar style="auto" />
     </View>
   );
