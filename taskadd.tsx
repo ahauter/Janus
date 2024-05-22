@@ -1,8 +1,7 @@
 import React, {useState, useMemo, useRef} from 'react';
 import { StatusBar, SafeAreaView, StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity, Button} from 'react-native';
 import CheckBox from 'expo-checkbox';
-import { Clock } from './clock';
-import { Task, TimeBlock } from './dataTypes';
+import { Task } from './dataTypes';
 import {TaskStub} from './utils/generateTasks';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
@@ -96,8 +95,9 @@ function DisplayTaskStub({name, setName, taskLength, setTaskLength, removeTask}:
 }
 
 function saveTasks(
+  navigation: any,
   taskStubs: TaskStubDisplay[], 
-  category: Category,
+  category: string,
   dueDate: Date,
   isEvent: boolean
 ) {
@@ -105,15 +105,23 @@ function saveTasks(
   for(let taskStub of taskStubs) {
     if(taskStub.name.length === 0) continue
     const newTask: Task = {
+      id: undefined,
       name: taskStub.name,
-      dueData: dueDate,
+      dueDate: dueDate,
+      completed: false,
       category: category,
+      isEvent: isEvent,
+      preqTasks: [],
       estimatedDuration: taskStub.taskLength
     }
+    if (lastTask) newTask.preqTasks.push(lastTask)
     //save the task in the db
   }
+  navigation.navigate('Home')
 }
-export default function AddTaskScreen() {
+
+//@ts-ignore
+export default function AddTaskScreen({navigation}) {
     const [taskStubs, setTaskStubs] = useState([newTaskStub()])
     const [taskOrderShown, setTaskOrderShow] = useState(false)
     const addTask = (t: TaskStubDisplay) => {
@@ -182,7 +190,7 @@ export default function AddTaskScreen() {
           }>
             {Categories.map(category => <Picker.Item key={category} value={category} label={category} />)}
           </Picker>
-          <Button title="Save" />
+          <Button title="Save" onPress={()=>saveTasks(navigation, taskStubs, category, dueDate, isEvent)} />
           </ScrollView>
         </SafeAreaView>
     );
@@ -197,7 +205,6 @@ const styles = StyleSheet.create({
         borderWidth: 1
     },
     scrollBar: {
-        height: 240, 
         margin: 12,
         padding: 10,
         borderWidth: 1

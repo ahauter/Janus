@@ -20,7 +20,7 @@ function HomeScreen({ navigation }) {
   const currentTimeBlocks = generateTimeBlocksForDay();
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row', position: 'absolute', top: 10, width: screen_width, justifyContent: 'space-between' }}>
+      <View style={{ flexDirection: 'row', position: 'absolute', top: 50, width: screen_width, justifyContent: 'space-between' }}>
         <TouchableOpacity
           style={styles.settings}
           onPress={() => navigation.navigate('Settings')}
@@ -137,7 +137,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Tasks" component={TasksScreen} />
+        <Stack.Screen name="Tasks" component={AddTaskScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerTitle: '', headerTransparent: true }} />
       </Stack.Navigator>
     </NavigationContainer>
