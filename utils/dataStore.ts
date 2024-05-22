@@ -114,10 +114,10 @@ async function setActiveTask(db: SQLiteDatabase, t: Task) {
   }
 }
 
-async function getActiveTask(db: SQLiteDatabase) {
+function getActiveTask(db: SQLiteDatabase) {
   try {
     //don't format the task values, because we don't want user's to sql inject themselves
-    const tasks = await db.getFirstAsync<TaskEntry>(`
+    const tasks = db.getFirstSync<TaskEntry>(`
       SELECT * FROM ${TASKTABLENAME} 
       where isActive = 1;`,
     );
@@ -267,9 +267,10 @@ export type AppDispatch = (action: AppActionType, args: any) => void;
 export function useAppState(): [AppState, AppDispatch] {
   const db = SQLite.openDatabaseSync('Janus.db');
   const tasks = getAllTasks(db);
+  const activeTask = getActiveTask(db);
   const initState: AppState = {
     currentTasks: tasks,
-    activeTask: null
+    activeTask: activeTask
   }
   const [state, dispatch] = useReducer(reducer(db), initState);
   const disp = (action: AppActionType, args: any) => dispatch({ type: action, ...args })

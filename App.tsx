@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { StatusBar, StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Clock } from './clock';
-import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
 import { AppState, AppStateContext, DispatchContext, getActiveTask, migrateDatabase, useAppState } from './utils/dataStore';
 import { Task, TimeBlock } from './dataTypes';
 import { generateTimeBlocksForDay } from './utils';
@@ -15,6 +14,7 @@ import { Linking } from 'react-native';
 import * as Device from 'expo-device';
 import { TaskList } from './taskview';
 import { TaskSelection } from './taskSelect';
+import { ViewActiveTask } from './viewActiveTask';
 
 const Stack = createStackNavigator();
 
@@ -42,37 +42,9 @@ function HomeScreen({ navigation }) {
         </View>
         <Clock timeBlocks={currentTimeBlocks} duration={1000 * 60 * 60 * 24} />
         {state.activeTask? 
-        <View style={{ flexDirection: 'row', justifyContent: 'center', width: screen_width, marginTop: 60, backgroundColor: '#007BFF', borderRadius: 10, padding: 5 }}>
-          <TouchableOpacity
-            style={styles.buttonBottom}
-            onPress={() => navigation.navigate('Tasks')}
-          >
-            <Text style={styles.smallText}>Current task</Text>
-          </TouchableOpacity>
-          <Text>  |  </Text>
-          <TouchableOpacity
-            style={styles.buttonBottom}
-            onPress={() => navigation.navigate('ViewTasks')}
-          >
-            <Text style={styles.smallText}>Timer</Text>
-          </TouchableOpacity>
-          <Text>  |  </Text>
-          <TouchableOpacity
-            style={styles.buttonBottom}
-            onPress={() => navigation.navigate('ViewTasks')}
-          >
-            <Text style={styles.smallText}>Pause task</Text>
-          </TouchableOpacity>
-          <Text>  |  </Text>
-          <TouchableOpacity
-            style={styles.buttonBottom}
-            onPress={() => navigation.navigate('ViewTasks')}
-          >
-            <Text style={styles.smallText}>Finish task</Text>
-          </TouchableOpacity>
-        </View>
+          <ViewActiveTask navigation={navigation}/>
         :
-        <TaskSelection />
+          <TaskSelection />
         }
       </View>
   );
@@ -82,9 +54,7 @@ function HomeScreen({ navigation }) {
 function SettingsScreen() {
   const SECTIONS = [
     {
-      title: 'About',
-      content: 'Dosha Days helps you build your schedule and increase your productivity by organizing your day using time blocks, personalizing your daily schedule with tasks, categorizing tasks to help you stay focused, visualizing your schedule, breaking down tasks into manageable parts, and much more. With Dosha Days, you can procrastinate productively.',
-    },
+      title: 'About', content: 'Dosha Days helps you build your schedule and increase your productivity by organizing your day using time blocks, personalizing your daily schedule with tasks, categorizing tasks to help you stay focused, visualizing your schedule, breaking down tasks into manageable parts, and much more. With Dosha Days, you can procrastinate productively.', },
     {
       title: 'Contact information',
       content: 'For support, please contact the Dosha Days team on Discord: @haust, @John, @Hiccup, @briscuit.',
