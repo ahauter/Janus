@@ -4,6 +4,7 @@ import { Svg, Circle, Text, Polygon, ClipPath, Defs, G, Line } from 'react-nativ
 import { TimeBlock } from "./dataTypes";
 import { useClockInfo } from './utils';
 import { Dimensions } from 'react-native';
+import { CATEGORIES_TO_COLORS } from './utils/categories';
 
 interface ClockProps {
     timeBlocks: TimeBlock[]
@@ -11,16 +12,6 @@ interface ClockProps {
     duration: number
 }
 
-function blockColor(block: TimeBlock) {
-  switch (block.category) {
-    case "sleep":
-      return "#9b54ba";
-    case "work":
-      return "#256983";
-    default:
-      return "#7582e5";
-  }  
-}
 
 export function Clock({ timeBlocks, duration }: ClockProps) {
   const { timeStr, handAngle } = useClockInfo();
@@ -37,7 +28,7 @@ export function Clock({ timeBlocks, duration }: ClockProps) {
         rotation={curRotation}
         originX={radius}
         originY={radius}
-        fill={blockColor(block)}
+        fill={CATEGORIES_TO_COLORS[block.category][0]}
       >
         <Text
           fill="black" 

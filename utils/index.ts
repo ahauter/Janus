@@ -1,17 +1,34 @@
-import { TimeBlock } from "../dataTypes";
+import { TimeBlock, Task } from "../dataTypes";
 import { Category } from "./categories";
 import { useState } from 'react'
 
 function getTimeBlockCategory(hour: number, dosha: "vata" | "pitta" | "kapha" = "vata"): Category {
   if (dosha === "vata") {
     if (hour >= 21 || hour <= 4) return "Sleep"
-    if (hour > 21 || hour < 4) return "Spiritual"
+    if (hour >= 20 || hour <= 5) return "Spiritual"
     if (hour > 5 && hour <= 10 || hour >= 16 && hour <= 20) return "Work/Creativity"
-    if (hour > 10 && hour <= 11) return "Exercise"
-    if (hour > 11 && hour <= 12 || hour > 14 && hour < 16) return "Chores"
-    if (hour > 12 && hour <= 13) return "Social"
+    if (hour === 11) return "Exercise"
+    if (hour === 14) return "Chores"
+    return "Social"
   } else if (dosha === "pitta") { } else { }
   return "None"
+}
+
+export function prioritizeTasks(tasks: Task[]): Task[] {
+  const curtime = new Date();
+  const currentCategory = getTimeBlockCategory(curtime.getHours());
+  const sortCondition = (a: Task, b: Task) => {
+    if (a.category !== b.category) {
+      if (a.category === currentCategory) {
+        return -1;
+      }
+      if (b.category === currentCategory) {
+        return 1;
+      }
+    }
+    return a.dueDate.getTime() - b.dueDate.getTime()
+  }
+  return tasks.sort(sortCondition)
 }
 
 /**

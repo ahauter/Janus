@@ -1,11 +1,14 @@
 export type Category = "Work/Creativity" |
+  "None" |
   "Exercise" |
   "Chores" |
   "Social" |
   "Spiritual" |
   "Sleep";
 
-export const Categories = ["Work/Creativity",
+export const Categories = [
+  "None",
+  "Work/Creativity",
   "Exercise",
   "Chores",
   "Social",
@@ -20,6 +23,7 @@ export const CATEGORIES_TO_COLORS = {
   "Chores": ["#FF5900", "#FFD700"],
   "Work/Creativity": ["#FF7F50", "#FFD64F", "#FF4F78"],
   "Exercise": ["#FF2F50", "#FF2EB9"],
+  "None": ["#0F0F0F"],
 }
 
 export function getCategoryColor(category: Category) {

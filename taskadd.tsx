@@ -1,18 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { StatusBar, SafeAreaView, StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity, Button} from 'react-native';
 import CheckBox from 'expo-checkbox';
 import { Task } from './dataTypes';
-import {TaskStub} from './utils/generateTasks';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
-import { HOUR, MINUTE } from './utils/duration';
 import { Categories, Category } from './utils/categories';
-import { addTask } from './utils/dataStore';
-import { SQLiteDatabase, useSQLiteContext } from 'expo-sqlite';
+import { AppDispatch, DispatchContext } from './utils/dataStore';
 
 function saveTasks(
+  dispatch: AppDispatch,
   navigation: any,
-  db: SQLiteDatabase,
   name: string,
   length: Date,
   category: string,
@@ -29,12 +26,13 @@ function saveTasks(
     isEvent: isEvent,
     estimatedDuration: length
   }
-  addTask(db, newTask)
+  dispatch("AddTask", {task: newTask})
   navigation.navigate('Home')
 }
 
 //@ts-ignore
 export default function AddTaskScreen({navigation}) {
+    const dispatch = useContext(DispatchContext);
     const [name, setName] = useState("")
     const defLength = new Date()
     defLength.setHours(0,0,0,0)
@@ -42,8 +40,7 @@ export default function AddTaskScreen({navigation}) {
     const[category, setCategory] = useState("")
     const[dueDate, setDueDate] = useState(new Date())
     const[isEvent, setIsEvent] = useState(false)
-    const db = useSQLiteContext();
-    //TODO make the tasks drag and dropable
+    if (dispatch === null) return 
     return (
         <SafeAreaView>
           <ScrollView style={styles.scrollBar}>
@@ -89,7 +86,8 @@ export default function AddTaskScreen({navigation}) {
           }>
             {Categories.map(category => <Picker.Item key={category} value={category} label={category} />)}
           </Picker>
-          <Button title="Save" onPress={()=>saveTasks(navigation, db, name, taskLength, category, dueDate, isEvent)} />
+          <Button title="Save" onPress={()=>saveTasks(
+            dispatch, navigation, name, taskLength, category, dueDate, isEvent)} />
           </ScrollView>
         </SafeAreaView>
     );

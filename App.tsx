@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StatusBar, StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Clock } from './clock';
 import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
-import { getActiveTask, migrateDatabase } from './utils/dataStore';
-import { TimeBlock } from './dataTypes';
+import { AppState, AppStateContext, DispatchContext, getActiveTask, migrateDatabase, useAppState } from './utils/dataStore';
+import { Task, TimeBlock } from './dataTypes';
 import { generateTimeBlocksForDay } from './utils';
 import AddTaskScreen from './taskadd';
 import { NavigationContainer } from '@react-navigation/native';
@@ -19,11 +19,11 @@ import { TaskSelection } from './taskSelect';
 const Stack = createStackNavigator();
 
 function HomeScreen({ navigation }) {
+  const state: AppState | null = useContext(AppStateContext);
   const screen_width = Dimensions.get('window').width * 0.9;
   const currentTimeBlocks = generateTimeBlocksForDay();
   const top = Device.brand === "Apple"? 50 : 20;   
-  const db = useSQLiteContext();
-  const activeTask = getActiveTask(db);
+  if (state===null) return
   return (
       <View style={styles.container}>
         <View style={{ flexDirection: 'row', position: 'absolute', top: top, width: screen_width, justifyContent: 'space-between' }}>
@@ -41,7 +41,8 @@ function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <Clock timeBlocks={currentTimeBlocks} duration={1000 * 60 * 60 * 24} />
-        {activeTask ? <View style={{ flexDirection: 'row', justifyContent: 'center', width: screen_width, marginTop: 60, backgroundColor: '#007BFF', borderRadius: 10, padding: 5 }}>
+        {state.activeTask? 
+        <View style={{ flexDirection: 'row', justifyContent: 'center', width: screen_width, marginTop: 60, backgroundColor: '#007BFF', borderRadius: 10, padding: 5 }}>
           <TouchableOpacity
             style={styles.buttonBottom}
             onPress={() => navigation.navigate('Tasks')}
@@ -73,7 +74,6 @@ function HomeScreen({ navigation }) {
         :
         <TaskSelection />
         }
-        <StatusBar barStyle="light-content" backgroundColor="black" />
       </View>
   );
 }
@@ -135,17 +135,20 @@ function SettingsScreen() {
 }
 
 export default function App() {
+  const [state, dispatch] = useAppState();
   return (
-    <SQLiteProvider databaseName='Janus.db' onInit={migrateDatabase}>
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Tasks" component={AddTaskScreen} />
-        <Stack.Screen name="ViewTasks" component={TaskList} />
-        <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerTitle: '', headerTransparent: true }} />
-      </Stack.Navigator>
-    </NavigationContainer>
-    </SQLiteProvider>
+    <AppStateContext.Provider value={state}>
+      <DispatchContext.Provider value={dispatch}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+            <Stack.Screen name="Tasks" component={AddTaskScreen} />
+            <Stack.Screen name="ViewTasks" component={TaskList} />
+            <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerTitle: '', headerTransparent: true }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </DispatchContext.Provider>
+    </AppStateContext.Provider>
   );
 }
 

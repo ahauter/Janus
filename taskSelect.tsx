@@ -1,16 +1,27 @@
-import React from 'react';
+import React, {useContext, useMemo, useState} from 'react';
 import { View, Text, Button} from 'react-native';
 import { Task } from './dataTypes';
-import { useSQLiteContext } from 'expo-sqlite';
-import { getAllIncompleteTasks } from './utils/dataStore';
+import { prioritizeTasks } from './utils';
+import { AppStateContext, AppState, AppDispatch, DispatchContext } from './utils/dataStore';
 
-interface TaskSelectionProps {
-  task: Task;
-  accept: () => void;
-  reject: () => void;
-}
-
-export function TaskSelection({task, accept, reject}: TaskSelectionProps) {
+interface TaskSelectionProps { }
+export function TaskSelection({}: TaskSelectionProps) {
+  const state: AppState | null = useContext(AppStateContext);
+  const dispatch: AppDispatch | null = useContext(DispatchContext);
+  const [taskInd, setTaskInd] = useState<number>(0);
+  if (state === null) return 
+  if (dispatch === null) return 
+  const {currentTasks} = state;
+  const incompleteTasks = currentTasks.filter(t => !t.completed);
+  const task = incompleteTasks[taskInd]; 
+  const accept = async () => {
+    dispatch("SetActive", {task: incompleteTasks[taskInd]})
+  };
+  const reject = () => {
+    const newInd = (taskInd + 1) % incompleteTasks.length;
+    setTaskInd(newInd);
+  };
+  if(task === undefined) return; 
   const durationStr = `${task.estimatedDuration.getHours()}h${task.estimatedDuration.getMinutes()}m`;
   return <View>
     <Text>{task.name}</Text>

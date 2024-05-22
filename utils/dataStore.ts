@@ -1,5 +1,7 @@
-import { SQLiteDatabase } from "expo-sqlite";
+import { SQLiteDatabase, useSQLiteContext } from "expo-sqlite";
 import { Task } from "../dataTypes";
+import { createContext, useReducer } from "react";
+import * as SQLite from 'expo-sqlite';
 
 const TASKTABLENAME = "tasks";
 
@@ -10,8 +12,7 @@ interface TaskEntry {
   dueDate: number,
   estimatedDuration: number,
   completed: boolean,
-  isActive: boolean,
-  isEvent: boolean
+  isActive: boolean, isEvent: boolean
 }
 
 function EntryToTask(t: TaskEntry): Task {
@@ -23,7 +24,7 @@ function EntryToTask(t: TaskEntry): Task {
   return { id, name, category, dueDate, completed, isEvent, estimatedDuration };
 }
 
-export async function addTask(db: SQLiteDatabase, t: Task): Promise<boolean> {
+async function addTask(db: SQLiteDatabase, t: Task): Promise<boolean> {
   if (t.id !== undefined) {
     console.error("Warning! Task already exists! Do not insert a task that has an id defined")
     return false;
@@ -44,7 +45,7 @@ export async function addTask(db: SQLiteDatabase, t: Task): Promise<boolean> {
   return true;
 }
 
-export async function updateTask(db: SQLiteDatabase, t: Task): Promise<boolean> {
+async function updateTask(db: SQLiteDatabase, t: Task): Promise<boolean> {
   if (t.id === undefined) {
     console.error("Warning! Task does not exist! Do not update a task without an id")
     return false;
@@ -71,7 +72,7 @@ export async function updateTask(db: SQLiteDatabase, t: Task): Promise<boolean> 
   return true;
 }
 
-export async function removeActiveTask(db: SQLiteDatabase) {
+async function removeActiveTask(db: SQLiteDatabase) {
   const task = await getActiveTask(db);
   if (task === null) return;
   const { id } = task;
@@ -93,7 +94,7 @@ export async function removeActiveTask(db: SQLiteDatabase) {
   }
 }
 
-export async function setActiveTask(db: SQLiteDatabase, t: Task) {
+async function setActiveTask(db: SQLiteDatabase, t: Task) {
   if (t.id === undefined) {
     console.error("Warning! Task does not exist! Do not update a task without an id")
     return false;
@@ -113,7 +114,7 @@ export async function setActiveTask(db: SQLiteDatabase, t: Task) {
   }
 }
 
-export async function getActiveTask(db: SQLiteDatabase) {
+async function getActiveTask(db: SQLiteDatabase) {
   try {
     //don't format the task values, because we don't want user's to sql inject themselves
     const tasks = await db.getFirstAsync<TaskEntry>(`
@@ -127,7 +128,7 @@ export async function getActiveTask(db: SQLiteDatabase) {
   }
 }
 
-export async function isPaused(db: SQLiteDatabase): Promise<boolean> {
+async function isPaused(db: SQLiteDatabase): Promise<boolean> {
   try {
     //don't format the task values, because we don't want user's to sql inject themselves
     const isPaused = await db.getFirstAsync<boolean>(`
@@ -142,7 +143,7 @@ export async function isPaused(db: SQLiteDatabase): Promise<boolean> {
   }
 }
 
-export async function deleteTask(db: SQLiteDatabase, t: Task): Promise<boolean> {
+async function deleteTask(db: SQLiteDatabase, t: Task): Promise<boolean> {
   if (t.id === undefined) {
     console.error("Warning! Task does not exist! Do not delete a task without an id")
     return false;
@@ -161,10 +162,10 @@ export async function deleteTask(db: SQLiteDatabase, t: Task): Promise<boolean> 
   return true;
 }
 
-export async function getAllTasks(db: SQLiteDatabase, limit: number = 1000): Promise<Task[]> {
+function getAllTasks(db: SQLiteDatabase, limit: number = 1000): Task[] {
   try {
     //don't format the task values, because we don't want user's to sql inject themselves
-    const tasks = await db.getAllAsync<TaskEntry>(`
+    const tasks = db.getAllSync<TaskEntry>(`
       SELECT * FROM ${TASKTABLENAME} 
       LIMIT ?;`, limit
     );
@@ -175,7 +176,7 @@ export async function getAllTasks(db: SQLiteDatabase, limit: number = 1000): Pro
   }
 }
 
-export async function getAllIncompleteTasks(db: SQLiteDatabase, limit: number = 1000): Promise<Task[]> {
+async function getAllIncompleteTasks(db: SQLiteDatabase, limit: number = 1000): Promise<Task[]> {
   try {
     //don't format the task values, because we don't want user's to sql inject themselves
     const tasks = await db.getAllAsync<TaskEntry>(`
@@ -200,9 +201,9 @@ export async function migrateDatabase(db: SQLiteDatabase) {
     "PRAGMA user_version"
   );
   let currentDbVersion = 0;
-  //if (dbVersionInfo) {
-  //  currentDbVersion = dbVersionInfo.user_version;
-  //}
+  if (dbVersionInfo) {
+    currentDbVersion = dbVersionInfo.user_version;
+  }
   if (currentDbVersion >= databaseVersion) {
     return
   }
@@ -213,9 +214,7 @@ export async function migrateDatabase(db: SQLiteDatabase) {
             id INTEGER PRIMARY KEY NOT NULL,
             name TEXT NOT NULL,
             category TEXT,
-            completed BOOLEAN NOT NULL CHECK (completed IN (0,1)),
-            isEvent BOOLEAN NOT NULL CHECK (completed IN (0,1)),
-            isActive BOOLEAN NOT NULL CHECK (completed IN (0,1)),
+            completed BOOLEAN NOT NULL CHECK (completed IN (0,1)), isEvent BOOLEAN NOT NULL CHECK (completed IN (0,1)), isActive BOOLEAN NOT NULL CHECK (completed IN (0,1)),
             isPaused BOOLEAN NOT NULL CHECK (completed IN (0,1)),
             dueDate INTEGER,
             estimatedDuration INTEGER
@@ -230,3 +229,51 @@ export async function migrateDatabase(db: SQLiteDatabase) {
   */
   await db.execAsync(`PRAGMA user_version = ${databaseVersion}`)
 }
+
+export interface AppState {
+  currentTasks: Task[];
+  activeTask: Task | null;
+}
+
+export interface AppAction {
+  type: AppActionType;
+  task: Task | null;
+}
+
+export type AppActionType = "AddTask" | "SetActive"
+
+function reducer(db: SQLiteDatabase): (state: AppState, action: AppAction) => AppState {
+  return (state: AppState, action: AppAction): AppState => {
+    const { task } = action;
+    switch (action.type) {
+      case "AddTask":
+        if (task === null) return state;
+        state.currentTasks.push(task);
+        addTask(db, task)
+        return state
+      case "SetActive":
+        if (task === null) return state;
+        state.activeTask = task;
+        removeActiveTask(db);
+        setActiveTask(db, task);
+        return state;
+      default:
+        console.error("Unrecongnized action");
+        return state;
+    }
+  }
+}
+export type AppDispatch = (action: AppActionType, args: any) => void;
+export function useAppState(): [AppState, AppDispatch] {
+  const db = SQLite.openDatabaseSync('Janus.db');
+  const tasks = getAllTasks(db);
+  const initState: AppState = {
+    currentTasks: tasks,
+    activeTask: null
+  }
+  const [state, dispatch] = useReducer(reducer(db), initState);
+  const disp = (action: AppActionType, args: any) => dispatch({ type: action, ...args })
+  return [state, disp];
+}
+export const AppStateContext = createContext<AppState | null>(null);
+export const DispatchContext = createContext<AppDispatch | null>(null);
