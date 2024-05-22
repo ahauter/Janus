@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { StatusBar, StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Clock } from './clock';
-import { SQLiteProvider } from 'expo-sqlite';
-import { migrateDatabase } from './utils/dataStore';
+import { SQLiteProvider, useSQLiteContext } from 'expo-sqlite';
+import { getActiveTask, migrateDatabase } from './utils/dataStore';
 import { TimeBlock } from './dataTypes';
 import { generateTimeBlocksForDay } from './utils';
 import AddTaskScreen from './taskadd';
@@ -14,6 +14,7 @@ import Accordion from 'react-native-collapsible/Accordion';
 import { Linking } from 'react-native';
 import * as Device from 'expo-device';
 import { TaskList } from './taskview';
+import { TaskSelection } from './taskSelect';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,8 @@ function HomeScreen({ navigation }) {
   const screen_width = Dimensions.get('window').width * 0.9;
   const currentTimeBlocks = generateTimeBlocksForDay();
   const top = Device.brand === "Apple"? 50 : 20;   
+  const db = useSQLiteContext();
+  const activeTask = getActiveTask(db);
   return (
       <View style={styles.container}>
         <View style={{ flexDirection: 'row', position: 'absolute', top: top, width: screen_width, justifyContent: 'space-between' }}>
@@ -38,7 +41,7 @@ function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <Clock timeBlocks={currentTimeBlocks} duration={1000 * 60 * 60 * 24} />
-        <View style={{ flexDirection: 'row', justifyContent: 'center', width: screen_width, marginTop: 60, backgroundColor: '#007BFF', borderRadius: 10, padding: 5 }}>
+        {activeTask ? <View style={{ flexDirection: 'row', justifyContent: 'center', width: screen_width, marginTop: 60, backgroundColor: '#007BFF', borderRadius: 10, padding: 5 }}>
           <TouchableOpacity
             style={styles.buttonBottom}
             onPress={() => navigation.navigate('Tasks')}
@@ -67,6 +70,9 @@ function HomeScreen({ navigation }) {
             <Text style={styles.smallText}>Finish task</Text>
           </TouchableOpacity>
         </View>
+        :
+        <TaskSelection />
+        }
         <StatusBar barStyle="light-content" backgroundColor="black" />
       </View>
   );

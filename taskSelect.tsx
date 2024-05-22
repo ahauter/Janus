@@ -1,6 +1,8 @@
 import React from 'react';
 import { View, Text, Button} from 'react-native';
 import { Task } from './dataTypes';
+import { useSQLiteContext } from 'expo-sqlite';
+import { getAllIncompleteTasks } from './utils/dataStore';
 
 interface TaskSelectionProps {
   task: Task;
