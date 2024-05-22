@@ -12,15 +12,17 @@ import { Dimensions } from 'react-native';
 import SettingsIcon from './assets/settings.png';
 import Accordion from 'react-native-collapsible/Accordion';
 import { Linking } from 'react-native';
+import * as Device from 'expo-device';
 
 const Stack = createStackNavigator();
 
 function HomeScreen({ navigation }) {
   const screen_width = Dimensions.get('window').width * 0.9;
   const currentTimeBlocks = generateTimeBlocksForDay();
+  const top = Device.brand === "Apple"? 50 : 20;   
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row', position: 'absolute', top: 50, width: screen_width, justifyContent: 'space-between' }}>
+      <View style={{ flexDirection: 'row', position: 'absolute', top: top, width: screen_width, justifyContent: 'space-between' }}>
         <TouchableOpacity
           style={styles.settings}
           onPress={() => navigation.navigate('Settings')}
