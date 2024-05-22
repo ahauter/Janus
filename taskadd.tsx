@@ -121,7 +121,6 @@ function saveTasks(
 //@ts-ignore
 export default function AddTaskScreen({navigation}) {
     const [taskStubs, setTaskStubs] = useState([newTaskStub()])
-    const [taskOrderShown, setTaskOrderShow] = useState(false)
     const addTask = (t: TaskStubDisplay) => {
       const newTasks = [...taskStubs];
       newTasks.push(t);
