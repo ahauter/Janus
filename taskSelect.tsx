@@ -30,15 +30,18 @@ export function TaskSelection() {
   const durationStr = `${task.estimatedDuration.getHours()}h${task.estimatedDuration.getMinutes()}m`;
   return (
     <View style={styles.container}>
+      <Text style={styles.content}>Suggested Task:</Text>
       <Text style={styles.content}>{task.name}</Text>
       <Text style={styles.time}>{durationStr}</Text>
       <Text> </Text>
-      <TouchableOpacity style={styles.button} onPress={reject}>
-        <Text style={styles.buttonText}>Next task</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={accept}>
-        <Text style={styles.buttonText}>Accept task</Text>
-      </TouchableOpacity>
+      <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity style={styles.button} onPress={reject}>
+          <Text style={styles.buttonText}>Skip task</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={accept}>
+          <Text style={styles.buttonText}>Start task</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -50,11 +53,12 @@ const styles = StyleSheet.create({
   },
   button: {
     marginVertical: 5,
+    margin: 10,
     paddingVertical: 10,
     paddingHorizontal: 10,
     width: 110,
     backgroundColor: '#007BFF',
-    borderRadius: 10, 
+    borderRadius: 10,
     alignItems: 'center',
   },
   buttonText: {
