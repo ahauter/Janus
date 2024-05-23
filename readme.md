@@ -1,40 +1,56 @@
-### Dosha Days
-This app tracks your upcoming tasks and suggests tasks for you based on your schedule.
-Select your ayurvedic dosha, and get a custom daily schedule.
-Tasks are recommended to you using the schedule you select.
+# Dosha Days 🗓️
 
-Dosha Days Application
+## Overview
 
-Problem
-Balancing productivity with emotional well-being presents a significant daily challenge for many of us
-We procrastinate, don’t live life to the fullest, and may not achieve our goals in a timely manner or at all 
+Dosha Days is an app designed to optimize your daily schedule and boost productivity by aligning it with your Ayurvedic dosha. It offers personalized task suggestions and time blocking features to help you achieve your goals while maintaining a healthy work-life balance.
 
-Proposed solution
-Dosha Days will help you build your schedule and increase your productivity by:
-Organizing your day using time blocks
-Personalizing your daily schedule with tasks from various categories
-Suggesting/scheduling tasks and activities based on your daily preferences
-Categorizing tasks to stay focused
-Visualizing your schedule
-Visualizing your work-life balance
-Breaking down your tasks into manageable parts
-Tracking your deadlines and prioritizing your tasks so that you can procrastinate productively
+## The Problem 🤔
 
-Additional features under consideration
-Habit visualizer
-Emotion tracking
-Goal setting
-Social page/section
-Leaderboards for “most optimized” life
-Tasks to be completed with friends
+* Struggling to balance productivity and emotional well-being?
+* Procrastination getting in the way of achieving your goals?
+* Feeling overwhelmed by endless to-do lists?
 
+Dosha Days is here to help!
 
-## Requirements
-    - nodejs v18.12.1j
-    - npm v9.1.2
-    - Expo Go app from the App Store or Play Store
-## Running the project:
-    First, run `npm install` to install dependencies.
-    Then, run `npx expo start` to run the project.
-    - Android: scan the QR code in your Expo Go app to open the project on your phone
-    - iPhone: Scan the QR code with your camera app to open the project on your phone
+## The Solution 💡
+
+Dosha Days empowers you to:
+
+* **Organize your day:** Structure your schedule with time blocks tailored to your dosha.
+* **Personalized task recommendations:** Receive suggestions for tasks from various categories that align with your daily preferences.
+* **Stay focused:** Categorize tasks to maintain focus and avoid distractions.
+* **Visualize your schedule:** Get a clear overview of your day and your work-life balance.
+* **Break down tasks:**  Divide larger tasks into smaller, more manageable steps.
+* **Track deadlines:** Prioritize tasks and manage your time effectively.
+
+## Potential Future Features ✨
+
+* **Habit tracker:**  Visualize and monitor your daily habits.
+* **Emotion tracking:**  Gain insights into your emotional patterns throughout the day.
+* **Goal setting:** Set, track, and achieve your personal and professional goals.
+* **Social features:** Connect with friends and share your progress.
+* **Leaderboards:**  Compete with others to achieve the "most optimized" life.
+* **Collaborative tasks:** Work together with friends to complete tasks and stay motivated.
+
+## Installation 🛠️
+
+**Requirements:**
+
+* Node.js v18.12.1
+* npm v9.1.2
+* Expo Go app (download from the App Store or Play Store)
+
+**Steps:**
+
+1. Clone this repository: `git clone [repository URL]`
+2. Install dependencies: `npm install`
+3. Start the development server: `npx expo start`
+4. Open the Expo Go app on your phone and scan the QR code to run the app.
+
+## Contributing 🤝
+
+We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for guidelines.
+
+## License 📄
+
+This project is licensed under the [MIT License](LICENSE).
