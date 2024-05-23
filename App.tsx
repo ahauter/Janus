@@ -41,7 +41,7 @@ function HomeScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <Clock timeBlocks={currentTimeBlocks} duration={1000 * 60 * 60 * 24} />
-        {state.activeTask? 
+        {state.activeTask !== null? 
           <ViewActiveTask navigation={navigation}/>
         :
           <TaskSelection />

@@ -4,8 +4,7 @@ import { Task } from './dataTypes';
 import { prioritizeTasks } from './utils';
 import { AppStateContext, AppState, AppDispatch, DispatchContext } from './utils/dataStore';
 
-interface TaskSelectionProps { }
-export function TaskSelection({}: TaskSelectionProps) {
+export function TaskSelection() {
   const state: AppState | null = useContext(AppStateContext);
   const dispatch: AppDispatch | null = useContext(DispatchContext);
   const [taskInd, setTaskInd] = useState<number>(0);
@@ -21,7 +20,12 @@ export function TaskSelection({}: TaskSelectionProps) {
     const newInd = (taskInd + 1) % incompleteTasks.length;
     setTaskInd(newInd);
   };
-  if(task === undefined) return; 
+  if(task === undefined) return <View>
+    <Text> 
+      You don't have anything to do! 
+      Try adding something
+    </Text>
+  </View>; 
   const durationStr = `${task.estimatedDuration.getHours()}h${task.estimatedDuration.getMinutes()}m`;
   return <View>
     <Text>{task.name}</Text>

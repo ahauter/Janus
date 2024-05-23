@@ -23,7 +23,6 @@ function EntryToTask(t: TaskEntry): Task {
   estimatedDuration.setTime(estDur);
   return { id, name, category, dueDate, completed, isEvent, estimatedDuration };
 }
-
 async function addTask(db: SQLiteDatabase, t: Task): Promise<boolean> {
   if (t.id !== undefined) {
     console.error("Warning! Task already exists! Do not insert a task that has an id defined")
@@ -72,8 +71,8 @@ async function updateTask(db: SQLiteDatabase, t: Task): Promise<boolean> {
   return true;
 }
 
-async function removeActiveTask(db: SQLiteDatabase) {
-  const task = await getActiveTask(db);
+function removeActiveTask(db: SQLiteDatabase) {
+  const task = getActiveTask(db);
   if (task === null) return;
   const { id } = task;
   if (id === undefined) {
@@ -81,8 +80,8 @@ async function removeActiveTask(db: SQLiteDatabase) {
     return
   }
   try {
-    await removeActiveTask(db);
-    await db.runAsync(`
+    removeActiveTask(db);
+    db.runSync(`
       UPDATE ${TASKTABLENAME} 
       SET 
         isActive = 0           
@@ -240,7 +239,7 @@ export interface AppAction {
   task: Task | null;
 }
 
-export type AppActionType = "AddTask" | "SetActive"
+export type AppActionType = "AddTask" | "SetActive" | "Complete" | "Pause";
 
 function reducer(db: SQLiteDatabase): (state: AppState, action: AppAction) => AppState {
   return (state: AppState, action: AppAction): AppState => {
@@ -250,27 +249,39 @@ function reducer(db: SQLiteDatabase): (state: AppState, action: AppAction) => Ap
         if (task === null) return state;
         state.currentTasks.push(task);
         addTask(db, task)
-        return state
+        setActiveTask(db, task);
+        return { ...state };
       case "SetActive":
         if (task === null) return state;
         state.activeTask = task;
         removeActiveTask(db);
-        setActiveTask(db, task);
-        return state;
+        return { ...state };
+      case "Complete":
+        if (state.activeTask === null) return state
+        console.log("Complete action")
+        removeActiveTask(db);
+        state.activeTask.completed = true;
+        state.activeTask = null;
+        return { ...state };
+      case "Pause":
+        if (state.activeTask === null) return state
+        console.log("Pause action");
+        removeActiveTask(db);
+        state.activeTask = null;
+        return { ...state };
       default:
         console.error("Unrecongnized action");
-        return state;
+        return { ...state };
     }
   }
 }
-export type AppDispatch = (action: AppActionType, args: any) => void;
-export function useAppState(): [AppState, AppDispatch] {
+export type AppDispatch = (action: AppActionType, args: any) => void; export function useAppState(): [AppState, AppDispatch] {
   const db = SQLite.openDatabaseSync('Janus.db');
   const tasks = getAllTasks(db);
   const activeTask = getActiveTask(db);
   const initState: AppState = {
     currentTasks: tasks,
-    activeTask: activeTask
+    activeTask: activeTask,
   }
   const [state, dispatch] = useReducer(reducer(db), initState);
   const disp = (action: AppActionType, args: any) => dispatch({ type: action, ...args })

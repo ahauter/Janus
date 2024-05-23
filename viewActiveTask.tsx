@@ -1,12 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { StatusBar, StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Dimensions } from 'react-native';
-import { AppState, AppStateContext, DispatchContext, getActiveTask, migrateDatabase, useAppState } from './utils/dataStore';
+import { AppDispatch, AppState, AppStateContext, DispatchContext, getActiveTask, migrateDatabase, useAppState } from './utils/dataStore';
 
 export function ViewActiveTask({navigation}) {
   const state: AppState | null = useContext(AppStateContext);
+  const dispatch: AppDispatch | null = useContext(DispatchContext);
   const screen_width = Dimensions.get('window').width * 0.9;
-  if (state === null || state.activeTask === null) return;
+  if (state === null || dispatch === null || state.activeTask === null) return;
   const activeTask = state.activeTask;
   return <View style={{ flexDirection: 'row', justifyContent: 'center', width: screen_width, marginTop: 60, backgroundColor: '#007BFF', borderRadius: 10, padding: 5 }}>
     <TouchableOpacity
@@ -25,14 +26,14 @@ export function ViewActiveTask({navigation}) {
     <Text>  |  </Text>
     <TouchableOpacity
       style={styles.buttonBottom}
-      onPress={() => navigation.navigate('ViewTasks')}
+      onPress={() => dispatch("Pause", {})}
     >
       <Text style={styles.smallText}>Pause task</Text>
     </TouchableOpacity>
     <Text>  |  </Text>
     <TouchableOpacity
       style={styles.buttonBottom}
-      onPress={() => navigation.navigate('ViewTasks')}
+      onPress={() => dispatch("Complete", {})}
     >
       <Text style={styles.smallText}>Finish task</Text>
     </TouchableOpacity>
