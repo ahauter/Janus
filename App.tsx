@@ -48,8 +48,16 @@ function HomeScreen({ navigation }) {
         :
         <TaskSelection />
       }
+      <TouchableOpacity onPress={() => navigation.navigate("Dosha")} >
+        <Text style={{
+          marginTop: 40,
+          fontWeight: 400,
+          fontSize: 18,
+          color: 'blue',
+        }}>Change Dosha</Text>
+      </TouchableOpacity>
       <StatusBar barStyle="light-content" backgroundColor="black" />
-    </View>
+    </View >
   );
 }
 
