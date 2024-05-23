@@ -47,12 +47,12 @@ export default function AddTaskScreen({ navigation }) {
   const [showDatePicker, setShowDatePicker] = useState(false)
   if (dispatch === null) return
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.safe}>
       <ScrollView style={styles.scrollBar}>
-        <Text style={styles.content}>Please add a task</Text>
+        <Text style={styles.content}>Please add a task below</Text>
         <View>
           <View style={styles.taskView}>
-            <TextInput style={styles.input} value={name} onChangeText={setName} />
+            <TextInput style={styles.inputTask} value={name} onChangeText={setName} />
             <View>
               <View style={styles.taskView}>
                 {isAndroid && <Button title="Select Duration" onPress={() => setShowDurationPicker(true)} />}
@@ -81,6 +81,7 @@ export default function AddTaskScreen({ navigation }) {
               onChange={(_, date) => { if (date) { setDueDate(date); setShowDatePicker(false) } }}
             />
           }
+          <Text>   </Text>
           {isAndroid && <Button title="Select Time" onPress={() => setShowTimePicker(true)} />}
           {
             (!isAndroid || showTimePicker) && <DateTimePicker
@@ -92,9 +93,9 @@ export default function AddTaskScreen({ navigation }) {
         </View>
         <View style={styles.formGroup}>
           <CheckBox value={isEvent} onValueChange={setIsEvent} />
-          <Text>Task can only happen at due date</Text>
+          <Text> Task can only happen at due date</Text>
         </View>
-        <Text>Category</Text>
+        <Text style={styles.content}>Category</Text>
         <Picker
           selectedValue={category}
           prompt='Category'
@@ -104,8 +105,12 @@ export default function AddTaskScreen({ navigation }) {
           }>
           {Categories.map(category => <Picker.Item key={category} value={category} label={category} />)}
         </Picker>
-        <Button title="Save" onPress={() => saveTasks(
-          dispatch, navigation, name, taskLength, category, dueDate, isEvent)} />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => saveTasks(dispatch, navigation, name, taskLength, category, dueDate, isEvent)}
+        >
+          <Text style={styles.buttonText}>SAVE</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -115,14 +120,21 @@ export default function AddTaskScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F9F4E3',
     paddingTop: StatusBar.currentHeight,
-    borderWidth: 1
+    borderWidth: 1, 
+    borderColor: '#F9F4E3',
+    justifyContent: 'center',
   },
   scrollBar: {
     margin: 12,
     padding: 10,
-    borderWidth: 1
+    borderWidth: 1, 
+    borderColor: '#F9F4E3',
+  },
+  safe: {
+    backgroundColor: '#F9F4E3',
+    height: '100%',
   },
   catPicker: {
     height: 20,
@@ -130,28 +142,59 @@ const styles = StyleSheet.create({
     padding: 10,
     borderWidth: 1
   },
+  button: {
+    width: 200, 
+    padding: 10,
+    backgroundColor: 'purple',
+    marginLeft: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
   taskView: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderWidth: 1
+    borderWidth: 1, 
+    borderColor: '#F9F4E3',
+  },
+  inputTask: {
+    flexDirection: "row",
+    height: 45,
+    width: 140,
+    margin: 12,
+    padding: 10,
+    borderWidth: 1,
+    marginLeft: 20,
+    borderRadius: 10,
   },
   input: {
     flexDirection: "row",
+    justifyContent: "flex-start",
     height: 60,
-    width: 200,
-    margin: 12,
+    width: 300,
+    margin: 10,
     padding: 10,
-    borderWidth: 1
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#F9F4E3',
   },
   formGroup: {
     flexDirection: "row",
-    height: 60,
-    margin: 12,
-    borderWidth: 1
+    justifyContent: "flex-start",
+    height: 30,
+    marginLeft: 20,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#F9F4E3',
   },
   content: {  
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
+    marginLeft: 10,
   },
 });
