@@ -249,7 +249,6 @@ function reducer(db: SQLiteDatabase): (state: AppState, action: AppAction) => Ap
         if (task === null) return state;
         state.currentTasks.push(task);
         addTask(db, task)
-        setActiveTask(db, task);
         return { ...state };
       case "SetActive":
         if (task === null) return state;
