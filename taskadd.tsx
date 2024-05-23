@@ -6,6 +6,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 import { Categories, Category } from './utils/categories';
 import { AppDispatch, DispatchContext } from './utils/dataStore';
+import * as Device from 'expo-device';
 
 function saveTasks(
   dispatch: AppDispatch,
@@ -31,58 +32,33 @@ function saveTasks(
 }
 
 //@ts-ignore
-export default function AddTaskScreen({navigation}) {
-    const dispatch = useContext(DispatchContext);
-    const [name, setName] = useState("")
-    const defLength = new Date()
-    defLength.setHours(0,0,0,0)
-    const [taskLength, setTaskLength] = useState(defLength)
-    const[category, setCategory] = useState("")
-    const[dueDate, setDueDate] = useState(new Date())
-    const[isEvent, setIsEvent] = useState(false)
-    if (dispatch === null) return 
-    return (
-        <SafeAreaView>
-          <ScrollView style={styles.scrollBar}>
-          <Text>Add a Task</Text>
-          <View>
-            <View style={styles.taskView}>
-              <TextInput style={styles.input} value={name} onChangeText={setName} />
-              <View>
-                <View style={styles.taskView}>
-                  <DateTimePicker 
-                    value={taskLength} 
-                    mode="time"
-                    locale='en_GB'
-                    onChange={(_, date) => { if(date) setTaskLength(date) }} 
-                  />
-                </View>
-              </View>
-            </View>
-          </View>
-          <View style={styles.input}>
-            <DateTimePicker
-              value={dueDate} 
-              mode="date"
-              onChange={(_, date) => { if(date) setDueDate(date) }} 
-            />
-            <DateTimePicker
-              value={dueDate} 
-              mode="time"
-              onChange={(_, date) => { if(date) setDueDate(date) }} 
-            />
-          </View>
-          <View style={styles.formGroup}>
-            <CheckBox  value={isEvent} onValueChange={setIsEvent}/>
-            <Text>Task can only happen at due date</Text>
-          </View>
-          <Text>Category</Text>
-          <Picker
-            selectedValue={category}
-            prompt='Category'
-            mode="dialog"
-            onValueChange={(itemValue: string) => 
-              setCategory(itemValue)
+  const isAndroid = Device.brand !== "Apple";
+  const [showDurationPicker, setShowDurationPicker] = useState(false)
+  const [showTimePicker, setShowTimePicker] = useState(false)
+  const [showDatePicker, setShowDatePicker] = useState(false)
+                {isAndroid && <Button title="Select Duration" onPress={() => setShowDurationPicker(true)} />}
+                {!isAndroid || showDurationPicker && <DateTimePicker
+                  value={taskLength}
+                  mode="time"
+                  locale='en_GB'
+                  onChange={(_, date) => {
+                    if (date) {
+                      setTaskLength(date)
+                      setShowDurationPicker(false)
+                    }
+                  }} />}
+          {isAndroid && <Button title="Select Date" onPress={() => setShowDatePicker(true)} />}
+          {!isAndroid || showDatePicker && <DateTimePicker
+            value={dueDate}
+            mode="date"
+            onChange={(_, date) => { if (date) { setDueDate(date); setShowDatePicker(false) } }}
+          />}
+          {isAndroid && <Button title="Select Time" onPress={() => setShowTimePicker(true)} />}
+          {!isAndroid || showTimePicker && <DateTimePicker
+            value={dueDate}
+            mode="time"
+            onChange={(_, date) => { if (date) { setDueDate(date); setShowTimePicker(false) } }}
+          />}
           }>
             {Categories.map(category => <Picker.Item key={category} value={category} label={category} />)}
           </Picker>
