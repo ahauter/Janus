@@ -127,6 +127,18 @@ function getActiveTask(db: SQLiteDatabase) {
   }
 }
 
+function getDosha(db: SQLiteDatabase) {
+  try {
+    //don't format the task values, because we don't want user's to sql inject themselves
+    const dosha = db.getFirstSync<string>(`
+      SELECT dosha FROM userSetting;`,
+    );
+    return dosha ? dosha : ""
+  } catch (err) {
+    console.error(err);
+    return "";
+  }
+}
 async function isPaused(db: SQLiteDatabase): Promise<boolean> {
   try {
     //don't format the task values, because we don't want user's to sql inject themselves
@@ -192,14 +204,16 @@ async function getAllIncompleteTasks(db: SQLiteDatabase, limit: number = 1000): 
 
 export function migrateDatabase(db: SQLiteDatabase) {
   //UPdate this if the schema changes :) 
-  const databaseVersion = 1;
+  const databaseVersion = 2;
   let dbVersionInfo = db.getFirstSync<{ user_version: number }>(
     "PRAGMA user_version"
   );
-  let currentDbVersion = 0;
+  let currentDbVersion = 1;
   if (dbVersionInfo) {
     currentDbVersion = dbVersionInfo.user_version;
   }
+
+  console.log(currentDbVersion)
   if (currentDbVersion >= databaseVersion) {
     return
   }
@@ -215,14 +229,18 @@ export function migrateDatabase(db: SQLiteDatabase) {
           dueDate INTEGER,
           estimatedDuration INTEGER
       );
-      `)
-    //example of how to insert data
+    `)
   }
-  /* add more migrations as we update schema 
-  if (currentDbVersion === 1) {
+  /* add more migrations as we update schema */
+  if (currentDbVersion <= 1) {
+    db.execSync(`
+    create table userSetting (
+        id INTEGER PRIMARY KEY NOT NULL,
+        dosha TEXT NOT NULL
+    );
+    `)
+  }
 
-  }
-  */
   db.execSync(`PRAGMA user_version = ${databaseVersion}`)
 }
 
@@ -272,6 +290,9 @@ function reducer(db: SQLiteDatabase): (state: AppState, action: AppAction) => Ap
         const { dosha } = action;
         if (dosha === null) return state;
         state.dosha = dosha;
+        db.runSync(`
+        insert into userSetting (dosha) VALUES (?);
+        `, dosha)
         return { ...state };
       default:
         console.error("Unrecongnized action");
@@ -284,10 +305,12 @@ export type AppDispatch = (action: AppActionType, args: any) => void; export fun
   migrateDatabase(db);
   const tasks = getAllTasks(db);
   const activeTask = getActiveTask(db);
+  const dosha = getDosha(db);
   const initState: AppState = {
     currentTasks: tasks,
     activeTask: activeTask,
-    dosha: ""
+    //@ts-ignore
+    dosha: dosha
   }
   const [state, dispatch] = useReducer(reducer(db), initState);
   const disp = (action: AppActionType, args: any) => dispatch({ type: action, ...args })
