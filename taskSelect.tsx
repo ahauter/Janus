@@ -11,7 +11,7 @@ export function TaskSelection() {
   if (state === null) return 
   if (dispatch === null) return 
   const {currentTasks} = state;
-  const incompleteTasks = currentTasks.filter(t => !t.completed);
+  const incompleteTasks = prioritizeTasks(currentTasks.filter(t => !t.completed));
   const task = incompleteTasks[taskInd]; 
   const accept = async () => {
     dispatch("SetActive", {task: incompleteTasks[taskInd]})

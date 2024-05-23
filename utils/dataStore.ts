@@ -260,6 +260,7 @@ function reducer(db: SQLiteDatabase): (state: AppState, action: AppAction) => Ap
         console.log("Complete action")
         removeActiveTask(db);
         state.activeTask.completed = true;
+        updateTask(db, state.activeTask);
         state.activeTask = null;
         return { ...state };
       case "Pause":
