@@ -54,7 +54,9 @@ function HomeScreen({ navigation }) {
 function SettingsScreen() {
   const SECTIONS = [
     {
-      title: 'About', content: 'Dosha Days helps you build your schedule and increase your productivity by organizing your day using time blocks, personalizing your daily schedule with tasks, categorizing tasks to help you stay focused, visualizing your schedule, breaking down tasks into manageable parts, and much more. With Dosha Days, you can procrastinate productively.', },
+      title: 'About',
+      content: 'Dosha Days helps you build your schedule and increase your productivity by organizing your day using time blocks, personalizing your daily schedule with tasks, categorizing tasks to help you stay focused, visualizing your schedule, breaking down tasks into manageable parts, and much more.\n\nWith Dosha Days, you can procrastinate productively.',
+    },
     {
       title: 'Contact information',
       content: 'For support, please contact the Dosha Days team on Discord: @haust, @John, @Hiccup, @briscuit.',
@@ -71,6 +73,19 @@ function SettingsScreen() {
         </Text>
       ),
     },
+    {
+      title: 'Resources',
+      content: 
+        <Text>
+            For more information on mental health (e.g., coaching, Dr. K's guide, parenting), please visit{' '}
+            <Text style={styles.linkText} onPress={() => Linking.openURL('https://www.healthygamer.com/')}> www.HealthyGamer.com</Text>
+            .
+        </Text>
+    },
+    {
+      title: 'Send feedback',
+      content: 'We would love to hear your feedback on Dosha Days. Please see the contact information section above to leave a comment or suggestion.'
+    }
   ];
 
   const [activeSections, setActiveSections] = useState([]);
