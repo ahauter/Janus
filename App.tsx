@@ -22,32 +22,32 @@ function HomeScreen({ navigation }) {
   const state: AppState | null = useContext(AppStateContext);
   const screen_width = Dimensions.get('window').width * 0.9;
   const currentTimeBlocks = generateTimeBlocksForDay();
-  const top = Device.brand === "Apple"? 50 : 20;   
-  if (state===null) return
+  const top = Device.brand === "Apple" ? 50 : 20;
+  if (state === null) return
   return (
-      <View style={styles.container}>
-        <View style={{ flexDirection: 'row', position: 'absolute', top: top, width: screen_width, justifyContent: 'space-between' }}>
-          <TouchableOpacity
-            style={styles.settings}
-            onPress={() => navigation.navigate('Settings')}
-          >
-            <Image source={SettingsIcon} style={styles.icon} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.taskButton}
-            onPress={() => navigation.navigate('Tasks')}
-          >
-            <Text style={styles.buttonText}>Add task</Text>
-          </TouchableOpacity>
-        </View>
-        <Clock timeBlocks={currentTimeBlocks} duration={1000 * 60 * 60 * 24} />
-        {state.activeTask !== null? 
-          <ViewActiveTask navigation={navigation}/>
-        :
-          <TaskSelection />
-        }
-        <StatusBar barStyle="light-content" backgroundColor="black" />
+    <View style={styles.container}>
+      <View style={{ flexDirection: 'row', position: 'absolute', top: top, width: screen_width, justifyContent: 'space-between' }}>
+        <TouchableOpacity
+          style={styles.settings}
+          onPress={() => navigation.navigate('Settings')}
+        >
+          <Image source={SettingsIcon} style={styles.icon} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.taskButton}
+          onPress={() => navigation.navigate('Tasks')}
+        >
+          <Text style={styles.buttonText}>Add task</Text>
+        </TouchableOpacity>
       </View>
+      <Clock timeBlocks={currentTimeBlocks} duration={1000 * 60 * 60 * 24} />
+      {state.activeTask !== null ?
+        <ViewActiveTask navigation={navigation} />
+        :
+        <TaskSelection />
+      }
+      <StatusBar barStyle="light-content" backgroundColor="black" />
+    </View>
   );
 }
 
@@ -76,11 +76,11 @@ function SettingsScreen() {
     },
     {
       title: 'Resources',
-      content: 
+      content:
         <Text>
-            For more information on mental health (e.g., coaching, Dr. K's guide, parenting), please visit{' '}
-            <Text style={styles.linkText} onPress={() => Linking.openURL('https://www.healthygamer.com/')}> www.HealthyGamer.com</Text>
-            .
+          For more information on mental health (e.g., coaching, Dr. K's guide, parenting), please visit{' '}
+          <Text style={styles.linkText} onPress={() => Linking.openURL('https://www.healthygamer.com/')}> www.HealthyGamer.com</Text>
+          .
         </Text>
     },
     {
@@ -209,5 +209,59 @@ const styles = StyleSheet.create({
   linkText: {
     fontSize: 18,
     color: 'blue',
+  },
+  navBar: {
+    backgroundColor: '#98D369',
+  },
+  titleBox: {
+    backgroundColor: '#98D369',
+    paddingTop: 30,
+    marginHorizontal: 10,
+    paddingHorizontal: 10,
+    width: '100%',
+    height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+
+  },
+  title: {
+    fontSize: 40,
+    paddingBottom: 5,
+    fontWeight: 'bold',
+    alignContent: 'center'
+
+  },
+  subtitle: {
+    fontSize: 15,
+    color: '#FFF',
+    alignContent: 'center',
+    justifyContent: 'center',
+    textAlign: 'center'
+  },
+  Dosha1: {
+    //flex: 2,
+    backgroundColor: '#ddd',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    margin: 30,
+    height: '20%',
+  },
+  Dosha2: {
+    //flex: 3,
+    backgroundColor: '#ddd',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    margin: 30,
+    height: '20%',
+  }, Dosha3: {
+    //flex: 4,
+    backgroundColor: '#ddd',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+    margin: 30,
+    height: '20%',
   },
 });
