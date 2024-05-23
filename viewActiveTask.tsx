@@ -3,7 +3,7 @@ import { StatusBar, StyleSheet, Text, View, TouchableOpacity, Image, ScrollView 
 import { Dimensions } from 'react-native';
 import { AppDispatch, AppState, AppStateContext, DispatchContext, getActiveTask, migrateDatabase, useAppState } from './utils/dataStore';
 
-export function ViewActiveTask({navigation}) {
+export function ViewActiveTask({ navigation }) {
   const state: AppState | null = useContext(AppStateContext);
   const dispatch: AppDispatch | null = useContext(DispatchContext);
   const screen_width = Dimensions.get('window').width * 0.9;
@@ -12,23 +12,16 @@ export function ViewActiveTask({navigation}) {
   return <View style={{ flexDirection: 'row', justifyContent: 'center', width: screen_width, marginTop: 60, backgroundColor: '#007BFF', borderRadius: 10, padding: 5 }}>
     <TouchableOpacity
       style={styles.buttonBottom}
-    >
-      <Text style={styles.smallText}>Current task</Text>
-      <Text style={styles.smallText}>{activeTask.name}</Text>
-    </TouchableOpacity>
-    <Text>  |  </Text>
-    <TouchableOpacity
-      style={styles.buttonBottom}
-      onPress={() => navigation.navigate('ViewTasks')}
-    >
-      <Text style={styles.smallText}>Timer</Text>
-    </TouchableOpacity>
-    <Text>  |  </Text>
-    <TouchableOpacity
-      style={styles.buttonBottom}
       onPress={() => dispatch("Pause", {})}
     >
       <Text style={styles.smallText}>Pause task</Text>
+    </TouchableOpacity>
+    <Text>  |  </Text>
+    <TouchableOpacity
+      style={styles.buttonBottom}
+    >
+      <Text style={styles.smallText}>Current task:</Text>
+      <Text style={styles.smallText}>{activeTask.name}</Text>
     </TouchableOpacity>
     <Text>  |  </Text>
     <TouchableOpacity

@@ -51,22 +51,25 @@ export default function AddTaskScreen({ navigation }) {
       <ScrollView style={styles.scrollBar}>
         <Text style={styles.content}>Please add a task:</Text>
         <View>
+          <TextInput style={styles.inputTask} value={name} placeholder='Task Name' onChangeText={setName} />
           <View style={styles.taskView}>
-            <TextInput style={styles.inputTask} value={name} onChangeText={setName} />
             <View>
               <View style={styles.taskView}>
                 {isAndroid && <Button title="Select Duration" onPress={() => setShowDurationPicker(true)} />}
                 {
-                  (!isAndroid || showDurationPicker) && <DateTimePicker
-                    value={taskLength}
-                    mode="time"
-                    locale='en_GB'
-                    onChange={(_, date) => {
-                      if (date) {
-                        setTaskLength(date)
-                        setShowDurationPicker(false)
-                      }
-                    }} />
+                  (!isAndroid || showDurationPicker) && <View>
+                    <Text>Est. Duration (optional)</Text>
+                    <DateTimePicker
+                      value={taskLength}
+                      mode="time"
+                      locale='en_GB'
+                      onChange={(_, date) => {
+                        if (date) {
+                          setTaskLength(date)
+                          setShowDurationPicker(false)
+                        }
+                      }} />
+                  </View>
                 }
               </View>
             </View>
@@ -75,27 +78,35 @@ export default function AddTaskScreen({ navigation }) {
         <View style={styles.input}>
           {isAndroid && <Button title="Select Date" onPress={() => setShowDatePicker(true)} />}
           {
-            (!isAndroid || showDatePicker) && <DateTimePicker
-              value={dueDate}
-              mode="date"
-              onChange={(_, date) => { if (date) { setDueDate(date); setShowDatePicker(false) } }}
-            />
+            (!isAndroid || showDatePicker) && <View>
+              <Text style={styles.content}>Select Due Date</Text>
+              <DateTimePicker
+                value={dueDate}
+                mode="date"
+                onChange={(_, date) => { if (date) { setDueDate(date); setShowDatePicker(false) } }}
+              />
+            </View>
           }
           <Text>   </Text>
           {isAndroid && <Button title="Select Time" onPress={() => setShowTimePicker(true)} />}
           {
-            (!isAndroid || showTimePicker) && <DateTimePicker
-              value={dueDate}
-              mode="time"
-              onChange={(_, date) => { if (date) { setDueDate(date); setShowTimePicker(false) } }}
-            />
+            (!isAndroid || showTimePicker) && <View>
+              <Text style={styles.content}>Select Time</Text>
+              <DateTimePicker
+                value={dueDate}
+                mode="time"
+                onChange={(_, date) => { if (date) { setDueDate(date); setShowTimePicker(false) } }}
+              />
+            </View>
           }
         </View>
-        <View style={styles.formGroup}>
-          <CheckBox value={isEvent} onValueChange={setIsEvent} />
-          <Text> Task can only happen at due date</Text>
-        </View>
-        <Text style={styles.content}>Select a category:</Text>
+        {
+          //<View style={styles.formGroup}>
+          //  <CheckBox value={isEvent} onValueChange={setIsEvent} />
+          //  <Text> Task can only happen at due date</Text>
+          //</View>
+        }
+        <Text style={{ ...styles.content, ...styles.categoryLabel }}>Select a category:</Text>
         <Picker
           selectedValue={category}
           prompt='Category'
@@ -112,7 +123,7 @@ export default function AddTaskScreen({ navigation }) {
           <Text style={styles.buttonText}>SAVE</Text>
         </TouchableOpacity>
       </ScrollView>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 }
 
@@ -122,14 +133,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F9F4E3',
     paddingTop: StatusBar.currentHeight,
-    borderWidth: 1, 
+    borderWidth: 1,
     borderColor: '#F9F4E3',
     justifyContent: 'center',
   },
   scrollBar: {
     margin: 12,
     padding: 10,
-    borderWidth: 1, 
+    borderWidth: 1,
     borderColor: '#F9F4E3',
   },
   safe: {
@@ -143,7 +154,7 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   button: {
-    width: 200, 
+    width: 200,
     padding: 10,
     backgroundColor: 'purple',
     marginLeft: 15,
@@ -159,7 +170,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderWidth: 1, 
+    borderWidth: 1,
     borderColor: '#F9F4E3',
   },
   inputTask: {
@@ -192,9 +203,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#F9F4E3',
   },
-  content: {  
+  content: {
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 10,
   },
+  categoryLabel: {
+    paddingTop: 10
+  }
 });
