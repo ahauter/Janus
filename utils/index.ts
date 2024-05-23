@@ -10,13 +10,27 @@ function getTimeBlockCategory(hour: number, dosha: "vata" | "pitta" | "kapha" = 
     if (hour === 11) return "Exercise"
     if (hour === 14) return "Chores"
     return "Social"
-  } else if (dosha === "pitta") { } else { }
+  } else if (dosha === "pitta") {
+    if (hour >= 22 || hour <= 5) return "Sleep"
+    if (hour >= 21 || hour <= 6) return "Spiritual"
+    if (hour > 8 && hour <= 17) return "Work/Creativity"
+    if (hour === 18) return "Chores"
+    if (hour === 7) return "Exercise"
+    return "Social"
+  } else {
+    if (hour <= 8) return "Sleep"
+    if (hour >= 23 || hour <= 9) return "Spiritual"
+    if (hour > 14) return "Work/Creativity"
+    if (hour === 13) return "Chores"
+    if (hour === 10) return "Exercise"
+    return "Social"
+  }
   return "None"
 }
 
-export function prioritizeTasks(tasks: Task[]): Task[] {
+export function prioritizeTasks(tasks: Task[], dosha: "vata" | "pitta" | "kapha"): Task[] {
   const curtime = new Date();
-  const currentCategory = getTimeBlockCategory(curtime.getHours());
+  const currentCategory = getTimeBlockCategory(curtime.getHours(), dosha);
   const sortCondition = (a: Task, b: Task) => {
     if (a.category !== b.category) {
       if (a.category === currentCategory) {
@@ -34,7 +48,7 @@ export function prioritizeTasks(tasks: Task[]): Task[] {
 /**
   * Returns a list of hour-long timeblocks for the current date
   */
-export function generateTimeBlocksForDay(): TimeBlock[] {
+export function generateTimeBlocksForDay(dosha: string): TimeBlock[] {
   //just doing hours for now 
   const result: TimeBlock[] = [];
   const hourLength = 1000 * 60 * 60;
@@ -44,7 +58,8 @@ export function generateTimeBlocksForDay(): TimeBlock[] {
     const t: TimeBlock = {
       startTime: startDate,
       duration: hourLength,
-      category: getTimeBlockCategory(i),
+      //@ts-ignore
+      category: getTimeBlockCategory(i, dosha),
       tasks: [],
       subTimeBlocks: []
     }
