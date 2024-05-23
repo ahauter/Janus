@@ -57,7 +57,7 @@ export default function AddTaskScreen({ navigation }) {
               <View style={styles.taskView}>
                 {isAndroid && <Button title="Select Duration" onPress={() => setShowDurationPicker(true)} />}
                 {
-                  !isAndroid || showDurationPicker && <DateTimePicker
+                  (!isAndroid || showDurationPicker) && <DateTimePicker
                     value={taskLength}
                     mode="time"
                     locale='en_GB'
@@ -75,7 +75,7 @@ export default function AddTaskScreen({ navigation }) {
         <View style={styles.input}>
           {isAndroid && <Button title="Select Date" onPress={() => setShowDatePicker(true)} />}
           {
-            !isAndroid || showDatePicker && <DateTimePicker
+            (!isAndroid || showDatePicker) && <DateTimePicker
               value={dueDate}
               mode="date"
               onChange={(_, date) => { if (date) { setDueDate(date); setShowDatePicker(false) } }}
@@ -83,7 +83,7 @@ export default function AddTaskScreen({ navigation }) {
           }
           {isAndroid && <Button title="Select Time" onPress={() => setShowTimePicker(true)} />}
           {
-            !isAndroid || showTimePicker && <DateTimePicker
+            (!isAndroid || showTimePicker) && <DateTimePicker
               value={dueDate}
               mode="time"
               onChange={(_, date) => { if (date) { setDueDate(date); setShowTimePicker(false) } }}
