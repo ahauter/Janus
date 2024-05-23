@@ -204,7 +204,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   accordion: {
-    marginTop: 50,
+
+    marginTop: Device.brand === "Apple" ? 100 : 50,
   },
   contentText: {
     fontSize: 18,
