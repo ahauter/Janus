@@ -49,8 +49,8 @@ Dosha Days empowers you to:
 
 ## Contributing 🤝
 
-We welcome contributions! Please see our [CONTRIBUTING.md]((https://github.com/ahauter/Janus/edit/master/readme.md)) file for guidelines.
+We welcome contributions! Please see our [CONTRIBUTING.md]([https://github.com/ahauter/Janus/blob/master/CONTRIBUTING.md](https://github.com/ahauter/Janus/blob/master/readme.md)) file for guidelines.
 
 ## License 📄
 
-This project is licensed under the [MIT License]((https://opensource.org/license/mit)).
+This project is licensed under the [MIT License](https://opensource.org/licenses/mit).
