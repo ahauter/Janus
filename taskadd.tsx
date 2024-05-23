@@ -49,7 +49,7 @@ export default function AddTaskScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView style={styles.scrollBar}>
-        <Text style={styles.content}>Please add a task below</Text>
+        <Text style={styles.content}>Please add a task:</Text>
         <View>
           <View style={styles.taskView}>
             <TextInput style={styles.inputTask} value={name} onChangeText={setName} />
@@ -95,7 +95,7 @@ export default function AddTaskScreen({ navigation }) {
           <CheckBox value={isEvent} onValueChange={setIsEvent} />
           <Text> Task can only happen at due date</Text>
         </View>
-        <Text style={styles.content}>Category</Text>
+        <Text style={styles.content}>Select a category:</Text>
         <Picker
           selectedValue={category}
           prompt='Category'
