@@ -49,7 +49,7 @@ export default function AddTaskScreen({ navigation }) {
   return (
     <SafeAreaView>
       <ScrollView style={styles.scrollBar}>
-        <Text>Add a Task</Text>
+        <Text style={styles.content}>Please add a task</Text>
         <View>
           <View style={styles.taskView}>
             <TextInput style={styles.input} value={name} onChangeText={setName} />
@@ -149,5 +149,9 @@ const styles = StyleSheet.create({
     height: 60,
     margin: 12,
     borderWidth: 1
+  },
+  content: {  
+    fontSize: 20,
+    fontWeight: 'bold',
   },
 });
