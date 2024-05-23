@@ -5,9 +5,10 @@ import { generateTimeBlocksForDay } from './utils';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Dimensions } from 'react-native';
-import SettingsIcon from './assets/settings.png';
+import InfoIcon from './assets/info.png';
 import Accordion from 'react-native-collapsible/Accordion';
 import { Linking } from 'react-native';
+import { migrateDatabase } from './utils/dataStore';
 
 const Stack = createStackNavigator();
 
@@ -18,10 +19,10 @@ function HomeScreen({ navigation }) {
     <View style={styles.container}>
       <View style={{ flexDirection: 'row', position: 'absolute', top: 10, width: screen_width, justifyContent: 'space-between' }}>
         <TouchableOpacity
-          style={styles.settings}
+          style={styles.info}
           onPress={() => navigation.navigate('Settings')}
         >
-          <Image source={SettingsIcon} style={styles.icon} />
+          <Image source={InfoIcon} style={styles.icon} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.taskButton}
@@ -77,7 +78,7 @@ function SettingsScreen() {
   const SECTIONS = [
     {
       title: 'About',
-      content: 'Dosha Days helps you build your schedule and increase your productivity by organizing your day using time blocks, personalizing your daily schedule with tasks, categorizing tasks to help you stay focused, visualizing your schedule, breaking down tasks into manageable parts, and much more. With Dosha Days, you can procrastinate productively.',
+      content: 'Dosha Days helps you build your schedule and increase your productivity by organizing your day using time blocks, personalizing your daily schedule with tasks, categorizing tasks to help you stay focused, visualizing your schedule, breaking down tasks into manageable parts, and much more.\n\nWith Dosha Days, you can procrastinate productively.',
     },
     {
       title: 'Contact information',
@@ -95,6 +96,19 @@ function SettingsScreen() {
         </Text>
       ),
     },
+    {
+      title: 'Resources',
+      content: 
+        <Text>
+            For more information on mental health (e.g., coaching, Dr. K's guide, parenting), please visit{' '}
+            <Text style={styles.linkText} onPress={() => Linking.openURL('https://www.healthygamer.com/')}> www.HealthyGamer.com</Text>
+            .
+        </Text>
+    },
+    {
+      title: 'Send feedback',
+      content: 'We would love to hear your feedback on Dosha Days. Please see the contact information section above to leave a comment or suggestion.'
+    }
   ];
 
   const [activeSections, setActiveSections] = useState([]);
@@ -134,7 +148,7 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Tasks" component={TasksScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerTitle: '', headerTransparent: true }} />
+        <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerTitle: 'Information', headerTransparent: true }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -148,11 +162,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginLeft: 8, // not sure why the clock isn't centered, so I have added this to compensate
   },
-  settings: {
+  info: {
     backgroundColor: 'purple',
     padding: 7,
-    paddingLeft: 12,
-    paddingRight: 12,
     borderRadius: 10,
     marginLeft: -10
   },
@@ -178,8 +190,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   icon: {
-    width: 20,
-    height: 20,
+    width: 25,
+    height: 25,
     tintColor: '#FFFFFF', // Apply white color to the icon
   },
   header: {
@@ -194,22 +206,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'purple',
   },
   headerText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '500',
     color: 'white',
   },
   content: {
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFF5FE',
   },
   accordion: {
     marginTop: 50,
   },
   contentText: {
-    fontSize: 18,
+    color: '#222222',
+    fontSize: 16,
   },
   linkText: {
-    fontSize: 18,
+    fontSize: 16,
     color: 'blue',
   },
 });
