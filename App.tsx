@@ -15,15 +15,17 @@ import * as Device from 'expo-device';
 import { TaskList } from './taskview';
 import { TaskSelection } from './taskSelect';
 import { ViewActiveTask } from './viewActiveTask';
+import { DoshaSelect } from './doshaSelectPage';
 
 const Stack = createStackNavigator();
 
 function HomeScreen({ navigation }) {
   const state: AppState | null = useContext(AppStateContext);
   const screen_width = Dimensions.get('window').width * 0.9;
-  const currentTimeBlocks = generateTimeBlocksForDay();
   const top = Device.brand === "Apple" ? 50 : 20;
   if (state === null) return
+  if (state.dosha === "") navigation.navigate("Dosha")
+  const currentTimeBlocks = generateTimeBlocksForDay(state.dosha);
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: 'row', position: 'absolute', top: top, width: screen_width, justifyContent: 'space-between' }}>
@@ -130,6 +132,7 @@ export default function App() {
             <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Tasks" component={AddTaskScreen} />
             <Stack.Screen name="ViewTasks" component={TaskList} />
+            <Stack.Screen name="Dosha" component={DoshaSelect} options={{ headerShown: false }} />
             <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerTitle: '', headerTransparent: true }} />
           </Stack.Navigator>
         </NavigationContainer>

@@ -229,14 +229,16 @@ export function migrateDatabase(db: SQLiteDatabase) {
 export interface AppState {
   currentTasks: Task[];
   activeTask: Task | null;
+  dosha: "vata" | "pitta" | "kapha" | "";
 }
 
 export interface AppAction {
   type: AppActionType;
   task: Task | null;
+  dosha: "vata" | "pitta" | "kapha" | null;
 }
 
-export type AppActionType = "AddTask" | "SetActive" | "Complete" | "Pause";
+export type AppActionType = "AddTask" | "SetActive" | "Complete" | "Pause" | "SetDosha";
 
 function reducer(db: SQLiteDatabase): (state: AppState, action: AppAction) => AppState {
   return (state: AppState, action: AppAction): AppState => {
@@ -266,6 +268,11 @@ function reducer(db: SQLiteDatabase): (state: AppState, action: AppAction) => Ap
         removeActiveTask(db);
         state.activeTask = null;
         return { ...state };
+      case "SetDosha":
+        const { dosha } = action;
+        if (dosha === null) return state;
+        state.dosha = dosha;
+        return { ...state };
       default:
         console.error("Unrecongnized action");
         return { ...state };
@@ -280,6 +287,7 @@ export type AppDispatch = (action: AppActionType, args: any) => void; export fun
   const initState: AppState = {
     currentTasks: tasks,
     activeTask: activeTask,
+    dosha: ""
   }
   const [state, dispatch] = useReducer(reducer(db), initState);
   const disp = (action: AppActionType, args: any) => dispatch({ type: action, ...args })

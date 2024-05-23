@@ -1,24 +1,46 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { StatusBar } from 'expo-status-bar';
-import { StatusBarStyle, StyleSheet, Text, View } from 'react-native';
+import { StatusBarStyle, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Clock } from './clock';
+import { DispatchContext } from './utils/dataStore';
 
-function DoshaSelect({ navigator }) {
+export function DoshaSelect({ navigation }) {
+    const dispatch = useContext(DispatchContext);
+    if (dispatch === null) return
     return <View style={styles.container}>
         <StatusBar animated />
         <View style={styles.titleBox}>
             <Text style={styles.title}>Choose Your Dosha</Text>
             <Text style={styles.subtitle}>{'This will affect when we schedule your most important tasks.\nDon\'t worry you can always change this later'}</Text>
         </View>
-        <View style={styles.Dosha1}>
-            <Text>Vata</Text>
-        </View>
-        <View style={styles.Dosha2}>
-            <Text>Pitta</Text>
-        </View>
-        <View style={styles.Dosha3}>
-            <Text>Kapha</Text>
-        </View>
+        <TouchableOpacity
+            onPress={() => {
+                dispatch("SetDosha", { dosha: "vata" })
+                navigation.navigate("Home")
+            }}
+            style={styles.Dosha1}>
+            <View >
+                <Text>Vata</Text>
+            </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.Dosha2}
+            onPress={() => {
+                dispatch("SetDosha", { dosha: "pitta" })
+                navigation.navigate("Home")
+            }} >
+            <View >
+                <Text>Pitta</Text>
+            </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.Dosha3}
+            onPress={() => {
+                dispatch("SetDosha", { dosha: "kapha" })
+                navigation.navigate("Home")
+            }} >
+            <View >
+                <Text>Kapha</Text>
+            </View>
+        </TouchableOpacity>
     </View>
 }
 
