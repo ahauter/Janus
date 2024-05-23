@@ -190,13 +190,10 @@ async function getAllIncompleteTasks(db: SQLiteDatabase, limit: number = 1000): 
   }
 }
 
-export async function migrateDatabase(db: SQLiteDatabase) {
+export function migrateDatabase(db: SQLiteDatabase) {
   //UPdate this if the schema changes :) 
   const databaseVersion = 1;
-  try {
-    await db.execAsync(`drop table ${TASKTABLENAME}`)
-  } catch { }
-  let dbVersionInfo = await db.getFirstAsync<{ user_version: number }>(
+  let dbVersionInfo = db.getFirstSync<{ user_version: number }>(
     "PRAGMA user_version"
   );
   let currentDbVersion = 0;
@@ -208,17 +205,17 @@ export async function migrateDatabase(db: SQLiteDatabase) {
   }
   if (currentDbVersion === 0) {
     //init tables for database
-    await db.execAsync(`
-        create table ${TASKTABLENAME} (
-            id INTEGER PRIMARY KEY NOT NULL,
-            name TEXT NOT NULL,
-            category TEXT,
-            completed BOOLEAN NOT NULL CHECK (completed IN (0,1)), isEvent BOOLEAN NOT NULL CHECK (completed IN (0,1)), isActive BOOLEAN NOT NULL CHECK (completed IN (0,1)),
-            isPaused BOOLEAN NOT NULL CHECK (completed IN (0,1)),
-            dueDate INTEGER,
-            estimatedDuration INTEGER
-        );
-        `)
+    db.execSync(`
+      create table ${TASKTABLENAME} (
+          id INTEGER PRIMARY KEY NOT NULL,
+          name TEXT NOT NULL,
+          category TEXT,
+          completed BOOLEAN NOT NULL CHECK (completed IN (0,1)), isEvent BOOLEAN NOT NULL CHECK (completed IN (0,1)), isActive BOOLEAN NOT NULL CHECK (completed IN (0,1)),
+          isPaused BOOLEAN NOT NULL CHECK (completed IN (0,1)),
+          dueDate INTEGER,
+          estimatedDuration INTEGER
+      );
+      `)
     //example of how to insert data
   }
   /* add more migrations as we update schema 
@@ -226,7 +223,7 @@ export async function migrateDatabase(db: SQLiteDatabase) {
 
   }
   */
-  await db.execAsync(`PRAGMA user_version = ${databaseVersion}`)
+  db.execSync(`PRAGMA user_version = ${databaseVersion}`)
 }
 
 export interface AppState {
@@ -277,6 +274,7 @@ function reducer(db: SQLiteDatabase): (state: AppState, action: AppAction) => Ap
 }
 export type AppDispatch = (action: AppActionType, args: any) => void; export function useAppState(): [AppState, AppDispatch] {
   const db = SQLite.openDatabaseSync('Janus.db');
+  migrateDatabase(db);
   const tasks = getAllTasks(db);
   const activeTask = getActiveTask(db);
   const initState: AppState = {
