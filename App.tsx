@@ -46,6 +46,7 @@ function HomeScreen({ navigation }) {
         :
           <TaskSelection />
         }
+        <StatusBar barStyle="light-content" backgroundColor="black" />
       </View>
   );
 }
